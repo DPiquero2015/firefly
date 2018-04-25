@@ -13,6 +13,12 @@ versionInfo: GameID
 	IFID = '1CB06A44-AA04-48CE-9892-BA2ABFECC120'
 ;
 
+stats: Thing
+	time = 0
+	oxygen = 100
+	temp = 75
+;
+
 me: Actor
 	location = roomBridge
 ;
@@ -22,67 +28,67 @@ roomBridge: Room 'The Bridge'
 	south = roomHallFront
 ;
 
-+ bridgeConsoles: NestedRoom
++ bridgeConsoles: Thing
 	vocabWords = 'consoles'
 	name = 'the consoles'
 	desc = "See the navigation controls, system controls, and comms. "
 ;
 
-++ bridgeControlsNavigation: NestedRoom
+++ bridgeControlsNavigation: Thing
 	vocabWords = 'navigation'
 	name = 'navigation controls'
 	desc = "See the navigation controls and joystick. Everything has been powered down. "
 ;
 
-+++ bridgeTheStick: Fixture
++++ bridgeTheStick: Thing
 	vocabWords = 'stick/joystick'
 	name = 'the joystick'
 	desc = "Moving the stick has no effect. "
 ;
 
-++ bridgeControlsSystem: NestedRoom
+++ bridgeControlsSystem: Thing
 	vocabWords = 'system'
 	name = 'system controls'
 	desc = "See the power diversion controls, door controls, and airlock controls. "
 ;
 
-+++ bridgeControlsPower: Fixture
++++ bridgeControlsPower: Thing
 	vocabWords = 'power'
 	name = 'power diversion controls'
 	desc = "Can toggle the lights, and re-route remaining power to different sectors of the ship. "
 ;
 
-+++ bridgeControlsDoors: Fixture
++++ bridgeControlsDoors: Thing
 	vocabWords = 'doors'
 	name = 'door controls'
 	desc = "Can open, close, and lock the various doors of the ship. "
 ;
 
-+++ bridgeControlsAirlock: Fixture
++++ bridgeControlsAirlock: Thing
 	vocabWords = 'airlock'
 	name = 'airlock controls'
 	desc = "Can open and close the various airlocks on the ship. "
 ;
 
-++ bridgeControlsComms: Fixture
+++ bridgeControlsComms: Thing
 	vocabWords = 'comms'
 	name = 'communication controls'
 	desc = "Can be rigged to emit a static that may cause passing ships to stop and investigate. "
 ;
 
-+ bridgeWindows: NestedRoom
++ bridgeWindows: Thing
 	vocabWords = 'windows'
 	name = 'windows'
 	desc = "See space, at the corner of no and where..."
 ;
 
-+ bridgeLadder: NestedRoom
++ bridgeLadder: Thing
 	vocabWords = 'ladder'
 	name = 'ladder'
 	desc = "A ladder leading down to an airlock. "
 ;
 
-++ bridgeAirlock: Fixture
+++ bridgeAirlock: Thing
 	vocabWords = 'airlock'
 	name = 'airlock'
 	desc = "An airlock. It seems to be sealed shut. "
