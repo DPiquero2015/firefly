@@ -1,0 +1,132 @@
+Bridge
+* look
+  - consoles
+    * navigation controls
+      - everything powered down
+      - moving stick has no effect -> engine busted
+    * systems controls
+      - power diversion controls
+        * toggle lights
+        * power to sectors
+      - door controls
+        * open/close/lock
+      - airlock controls
+        * open/close
+    * comms
+      - currently doing nothing, note can be rigged to emit static
+      - if static on and time:
+        * message received
+          - respond
+            * will board and provide part (assume player investigates engine)
+  - windows
+    * see space "the corner of no and where...", "out here in the black", "well, here I am" (monologue bank)
+  - (side) ladder to sub airlock
+    * trap door sealed, no way to open it
+
+Front Hall
+* look
+  - ladder up to life support
+    * oxygen controls
+      - shutoff
+        * severity = severe
+        * lower time to 10min
+      - partial shutoff
+        * increase oxygen severity by 1
+        * increase time
+    * temperature controls
+      - shutoff
+        * severity = severe
+        * lower time to 30min
+      - partial shutoff
+        * increase temperature severity by 1
+        * increase time
+
+Crew Dorms
+* look
+  - ladders leading down into rooms
+    * search rooms -> find supplies
+      - weapons (guns)
+      - food & water
+      - clothing
+
+Kitchen & Dining
+* look
+  - cabinets and cupboards
+    * food
+    * cutlery (melee weapons)
+  - table
+    * cutlery
+
+Air Lock
+* look
+  - door switch
+    * open
+      - suit on
+        * chill outside
+      - suit off
+        * death
+    * close
+    * broken
+      - nothing
+
+Cargo Bay
+* look
+  - cargo boxes
+    * locked
+    * weapons (guns)
+    * spare parts (random chance for part)
+  - space suits
+    * wear
+      - personal oxygen supply
+        * reduce personal severity to normal
+        * 15 min
+      - personal temperature severity decreases by 1
+
+Catwalk
+* look
+  - see Cargo Bay
+
+Infirmary
+* look
+  - "patient seat, couches on side"
+  - cabinets
+    * bio-foam
+      - decrease injury debuff
+    * bandages
+    * painkillers
+    * adrenaline
+      - eliminate all debuffs
+        * 5min
+  - side tables
+    * dope
+      - unconscious 2hr
+    * syringes
+    * surgical tools
+
+Passenger Dorms
+* look
+  - dressers & drawers
+    * clothes
+    * food
+
+Back Hall
+* look
+  - ladder up, auxiliary access
+    * airlock
+    * gravity
+  
+Engine Room
+* look
+  - engine
+    * observe
+    * attempt to diagnose
+      - if read manual
+        * reveal that part is missing (100%)
+      - else
+        * random chance to reveal issue
+    * repair (if have part)
+  - equipment bins
+    * search
+      - tools
+      - misc. parts
+      - manuals

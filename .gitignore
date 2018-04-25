@@ -6,5 +6,8 @@
 !Firefly.t3m
 !GameInfo.txt
 
-#include git files
+# documents
+!docs/
+
+# include git files
 !.gitignore

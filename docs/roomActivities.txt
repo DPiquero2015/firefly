@@ -1,0 +1,63 @@
+Bridge
+* investigate comms
+* rig comms (create static interference)
+* look out the window
+* jiggle stick
+* control ship systems
+  - divert power
+  - control doors
+  - control airlocks
+* minor airlock access
+
+Front Hall
+* (location of life support)
+* modify
+  - induce negative effects, but extend duration
+* shut down life support (localizable)
+
+Crew Dorms
+* supplies
+  - weapons
+  - food & water
+  - clothing
+
+Kitchen & Dining
+* food
+* makeshift weapons (cutlery)
+
+Air Lock
+* open door
+
+Cargo Bay
+* space suits
+* weapons
+* (stretch: random cargo item)
+* sealed cargo boxes
+* search for parts
+
+Catwalk
+* observe
+
+Infirmary
+* medical supplies
+  - adrenaline
+  - bio-foam
+  - bandages
+  - painkillers
+  - dope (tranquilizer)
+
+Passenger Dorms
+* clothes
+* food
+
+Back Hall
+* minor airlock access
+* gravity rotor access (stretch)
+
+Engine Room
+* investigate engine
+  - diagnosing problem
+  - straight investigating
+  - fix (with part)
+* technical manuals
+* search for parts

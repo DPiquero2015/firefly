@@ -1,0 +1,39 @@
+* rigging comms
+  - enables static (allows for ship to find player)
+
+* X-hour - ship flies by
+  - if static
+    * ship stops, hails firefly (15 minutes)
+      - if answer
+        * board ("peaceful")
+          - if player opens for ship
+            * ambush
+              - act
+                * random chance of being shot (head, chest, stomach, legs)
+                  - if alive
+                    * retaliation
+                      - if weapon
+                        * get part, ship leaves
+                      - else
+                        * grapple
+                          - random chance of hostage or shot again
+                            * if hostage
+                              - negotiate
+                                * get part, ship leaves
+                            * else
+                              - dead ending
+                  - else
+                    * ending
+              - submit
+                * slavery ending
+          - else
+            * board (hostile)
+      - else
+        * board (hostile)
+          - encounter
+            * random chance of being shot (head, chest, stomach, legs)
+          - avoid (stretch)
+            * ambush
+            * trap
+  - else
+    * continues flying

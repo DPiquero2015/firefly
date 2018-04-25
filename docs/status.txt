@@ -1,0 +1,41 @@
+Status Command
+* oxygen
+* temperature
+* time
+* critical systems
+  - life support
+  - engine
+
+Effects - Defaults (movement +1, actions +0)
+* oxygen deprivation
+  - minor
+    * movement costs +2 time
+    * actions cost +1 time
+  - severe
+    * movement costs +10 time
+    * random chance of actions failing
+  - death
+* temperature (clothing decreases severity by 1)
+  - minor
+    * movement costs +2 time
+    * actions cost +1 time
+  - severe
+    * movement costs +10 time
+    * actions cost +5 time
+  - death
+
+Ship Docking
+  - oxygen
+    * replenishes completely
+  - temperature
+    * severity decreases by 1
+
+Random
+* Reavers
+  - very, very small random chance
+    * Bridge
+      - see the ship approach
+    * else
+      - cut input
+      - reaver ending
+      - dead
