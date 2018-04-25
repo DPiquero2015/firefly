@@ -18,76 +18,131 @@ me: Actor
 ;
 
 roomBridge: Room 'The Bridge'
-	"The bridge of the ship.
-	\nTo the south is the front hall. "
+	"The bridge of the ship. To the south is the front hall. Inside there are consoles, windows looking out, and to the side a ladder. "
 	south = roomHallFront
 ;
 
++ bridgeConsoles: NestedRoom
+	vocabWords = 'consoles'
+	name = 'the consoles'
+	desc = "See the navigation controls, system controls, and comms. "
+;
+
+++ bridgeControlsNavigation: NestedRoom
+	vocabWords = 'navigation'
+	name = 'navigation controls'
+	desc = "See the navigation controls and joystick. Everything has been powered down. "
+;
+
++++ bridgeTheStick: Fixture
+	vocabWords = 'stick/joystick'
+	name = 'the joystick'
+	desc = "Moving the stick has no effect. "
+;
+
+++ bridgeControlsSystem: NestedRoom
+	vocabWords = 'system'
+	name = 'system controls'
+	desc = "See the power diversion controls, door controls, and airlock controls. "
+;
+
++++ bridgeControlsPower: Fixture
+	vocabWords = 'power'
+	name = 'power diversion controls'
+	desc = "Can toggle the lights, and re-route remaining power to different sectors of the ship. "
+;
+
++++ bridgeControlsDoors: Fixture
+	vocabWords = 'doors'
+	name = 'door controls'
+	desc = "Can open, close, and lock the various doors of the ship. "
+;
+
++++ bridgeControlsAirlock: Fixture
+	vocabWords = 'airlock'
+	name = 'airlock controls'
+	desc = "Can open and close the various airlocks on the ship. "
+;
+
+++ bridgeControlsComms: Fixture
+	vocabWords = 'comms'
+	name = 'communication controls'
+	desc = "Can be rigged to emit a static that may cause passing ships to stop and investigate. "
+;
+
++ bridgeWindows: NestedRoom
+	vocabWords = 'windows'
+	name = 'windows'
+	desc = "See space, at the corner of no and where..."
+;
+
++ bridgeLadder: NestedRoom
+	vocabWords = 'ladder'
+	name = 'ladder'
+	desc = "A ladder leading down to an airlock. "
+;
+
+++ bridgeAirlock: Fixture
+	vocabWords = 'airlock'
+	name = 'airlock'
+	desc = "An airlock. It seems to be sealed shut. "
+;
+
 roomHallFront: Room 'The Front Hall'
-	"The front hall.
-	\nTo the north is the bridge. To the south is the kitchen. Below are the crew's dorms. "
+	"The front hall. To the north is the bridge. To the south is the kitchen. Below are the crew's dorms. "
 	north = roomBridge
 	south = roomKitchen
 	down = roomDormsCrew
 ;
 
 roomKitchen: Room 'The Kitchen'
-	"The kitchen.
-	\nTo the north is the front hall. To the south is the back hall. "
+	"The kitchen. To the north is the front hall. To the south is the back hall. "
 	north = roomHallFront
 	south = roomHallBack
 ;
 
 roomHallBack: Room 'The Back Hall'
-	"The back hall.
-	\nTo the north is the kitchen. To the south is the engine room. "
+	"The back hall. To the north is the kitchen. To the south is the engine room. "
 	north = roomKitchen
 	south = roomEngine
 ;
 
 roomEngine: Room 'The Engine Room'
-	"The engine room.
-	\nTo the north is the back hall. "
+	"The engine room. To the north is the back hall. "
 	north = roomHallBack
 ;
 
 roomDormsCrew: Room 'Crew Dorms'
-	"The crew's dorms.
-	\nTo the south is the catwalk. Above is the front hall. "
+	"The crew's dorms. To the south is the catwalk. Above is the front hall. "
 	south = roomCatwalk
 	up = roomHallFront
 ;
 
 roomCatwalk: Room 'The Catwalk'
-	"The catwalk above the cargo bay.
-	\nTo the north are the crew's dorms. Beneath is the cargo bay. "
+	"The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. "
 	north = roomDormsCrew
 	down = roomCargoBay
 ;
 
 roomAirLock: Room 'The Air Lock'
-	"The air lock before the cargo bay.
-	\nTo the south is the cargo bay. "
+	"The air lock before the cargo bay. To the south is the cargo bay. "
 	south = roomCargoBay
 ;
 
 roomCargoBay: Room 'The Cargo Bay'
-	"The cargo bay.
-	\nTo the north is the air lock. To the south is the infirmary. Above is the catwalk. "
+	"The cargo bay. To the north is the air lock. To the south is the infirmary. Above is the catwalk. "
 	north = roomAirLock
 	south = roomInfirmary
 	up = roomCatwalk
 ;
 
 roomInfirmary: Room 'The Infirmary'
-	"The infirmary.
-	\nTo the north is the cargo bay. To the south are the passengers' dorms. "
+	"The infirmary. To the north is the cargo bay. To the south are the passengers' dorms. "
 	north = roomCargoBay
 	south = roomDormsPassengers
 ;
 
 roomDormsPassengers: Room 'Passenger Dorms'
-	"The passenger's dorms.
-	\nTo the north is the infirmary. "
+	"The passenger's dorms. To the north is the infirmary. "
 	north = roomInfirmary
 ;

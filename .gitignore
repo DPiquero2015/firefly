@@ -6,8 +6,10 @@
 !Firefly.t3m
 !GameInfo.txt
 
-# documents
+# folders
 !docs/
+!obj/.gitkeep
 
 # include git files
 !.gitignore
+!README.md
