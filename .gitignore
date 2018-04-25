@@ -1,0 +1,10 @@
+# exclude all
+/*
+
+# project files
+!Firefly.t
+!Firefly.t3m
+!GameInfo.txt
+
+#include git files
+!.gitignore
