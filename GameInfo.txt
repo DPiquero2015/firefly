@@ -3,7 +3,7 @@ Name: Firefly
 Byline: by Dmitri Piquero and Ryan Wojtyla
 Desc: Television and Pop Culture Spring 2018 Final Project
 Version: 1
-ReleaseDate: 2018-04-25
+ReleaseDate: 2018-04-29
 Language: en-US
 LicenseType: Freeware
 CopyingRules: Nominal cost only; compilations allowed
