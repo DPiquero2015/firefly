@@ -13,11 +13,22 @@ versionInfo: GameID
 	IFID = '1CB06A44-AA04-48CE-9892-BA2ABFECC120'
 ;
 
+modify Thing
+        contentsListedInExamine = nil
+;
+
 stats: Thing
-	time = 0
+        // vitals
+        time = 0
 	oxygen = 100
 	temp = 75
 
+        // game values
+        lights = true
+        manual = nil
+        locked = nil        
+
+        // defaults
 	defTime = 1300
 ;
 
@@ -47,27 +58,40 @@ me: Actor
 
 	travelTo(dest, connector, backConnector)
 	{
-		stats.time++;
+                stats.time++;
 		stats.oxygen--;
 		stats.temp--;
 		inherited(dest, connector, backConnector);
 	}
 ;
 
+
 /*----------BEGIN BRIDGE----------*/
 
 roomBridge: Room 'The Bridge'
 	"The bridge of the ship. To the south is the front hall. Inside there are consoles, windows looking out, and to the side a ladder. "
 	south = roomHallFront
+        
+        dobjFor(Travel)
+        {
+                check()
+                {
+                        if(stats.locked)
+                        {
+                                failCheck('The doors are locked. ');
+                        }
+                }
+        }
 ;
 
-+ bridgeConsoles: Thing
+
++ bridgeConsoles: Fixture
         vocabWords = 'consoles'
 	name = 'the consoles'
 	desc = "See the navigation controls, system controls, and comms. "
 ;
 
-++ bridgeControlsNavigation: Thing
+++ bridgeControlsNavigation: Fixture
 	vocabWords = 'navigation'
 	name = 'navigation controls'
 	desc = "See the navigation controls and joystick. Everything has been powered down. "
@@ -79,22 +103,45 @@ roomBridge: Room 'The Bridge'
 	desc = "Moving the stick has no effect. "
 ;
 
-++ bridgeControlsSystem: Thing
+++ bridgeControlsSystem: Fixture
 	vocabWords = 'system'
 	name = 'system controls'
-	desc = "See the power diversion controls, door controls, and airlock controls. "
+	desc = "See the power controls, door controls, and airlock controls. "
 ;
 
-+++ bridgeControlsPower: Thing
++++ bridgeControlsPower: Switch
 	vocabWords = 'power'
-	name = 'power diversion controls'
-	desc = "Can toggle the lights, and re-route remaining power to different sectors of the ship. "
+	name = 'power controls'
+	desc = "Can toggle the lights. "
+        isOn = true
+        makeOn(val)
+        {
+                inherited(val);
+                stats.lights = val;
+        }
 ;
 
-+++ bridgeControlsDoors: Thing
++++ bridgeControlsDoors: Lockable, Fixture
 	vocabWords = 'doors'
 	name = 'door controls'
-	desc = "Can open, close, and lock the various doors of the ship. "
+	desc = "Can lock and unlock the ship's doors. "
+        initiallyLocked = nil
+        dobjFor(Lock)
+        {
+                action()
+                {
+                        stats.locked = true;
+                        "Doors are locked. ";
+                }                
+        }
+        dobjFor(Unlock)
+        {
+                action()
+                {
+                        stats.locked = nil;
+                        "Doors are unlocked. ";
+                }                
+        }       
 ;
 
 +++ bridgeControlsAirlock: Thing
