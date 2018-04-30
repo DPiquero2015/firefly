@@ -14,21 +14,21 @@ versionInfo: GameID
 ;
 
 modify Thing
-        contentsListedInExamine = nil
+    contentsListedInExamine = nil
 ;
 
 stats: Thing
-        // vitals
-        time = 0
+    // vitals
+    time = 0
 	oxygen = 100
 	temp = 75
 
-        // game values
-        lights = true
-        manual = nil
-        locked = nil        
+    // game values
+    lights = true
+    manual = nil
+    locked = nil        
 
-        // defaults
+    // defaults
 	defTime = 1300
 ;
 
@@ -58,35 +58,32 @@ me: Actor
 
 	travelTo(dest, connector, backConnector)
 	{
-                stats.time++;
+        stats.time++;
 		stats.oxygen--;
 		stats.temp--;
 		inherited(dest, connector, backConnector);
 	}
 ;
 
-
 /*----------BEGIN BRIDGE----------*/
 
 roomBridge: Room 'The Bridge'
 	"The bridge of the ship. To the south is the front hall. Inside there are consoles, windows looking out, and to the side a ladder. "
 	south = roomHallFront
-        
-        dobjFor(Travel)
+    dobjFor(Travel)
+    {
+        check()
         {
-                check()
-                {
-                        if(stats.locked)
-                        {
-                                failCheck('The doors are locked. ');
-                        }
-                }
+            if(stats.locked)
+            {
+                failCheck('The doors are locked. ');
+            }
         }
+    }
 ;
 
-
 + bridgeConsoles: Fixture
-        vocabWords = 'consoles'
+    vocabWords = 'consoles'
 	name = 'the consoles'
 	desc = "See the navigation controls, system controls, and comms. "
 ;
@@ -113,35 +110,35 @@ roomBridge: Room 'The Bridge'
 	vocabWords = 'power'
 	name = 'power controls'
 	desc = "Can toggle the lights. "
-        isOn = true
-        makeOn(val)
-        {
-                inherited(val);
-                stats.lights = val;
-        }
+    isOn = true
+    makeOn(val)
+    {
+        inherited(val);
+        stats.lights = val;
+    }
 ;
 
 +++ bridgeControlsDoors: Lockable, Fixture
 	vocabWords = 'doors'
 	name = 'door controls'
 	desc = "Can lock and unlock the ship's doors. "
-        initiallyLocked = nil
-        dobjFor(Lock)
+    initiallyLocked = nil
+    dobjFor(Lock)
+    {
+        action()
         {
-                action()
-                {
-                        stats.locked = true;
-                        "Doors are locked. ";
-                }                
+            stats.locked = true;
+            "Doors are locked. ";
         }
-        dobjFor(Unlock)
+    }
+    dobjFor(Unlock)
+    {
+        action()
         {
-                action()
-                {
-                        stats.locked = nil;
-                        "Doors are unlocked. ";
-                }                
-        }       
+            stats.locked = nil;
+            "Doors are unlocked. ";
+        }
+    }
 ;
 
 +++ bridgeControlsAirlock: Thing
@@ -186,21 +183,21 @@ roomHallFront: Room 'The Front Hall'
 ;
 
 + hallFrontLadder: Thing
-        vocabWords = 'ladder'
-        name = 'ladder'
-        desc = "The ladder up to the life support equipment. "
+    vocabWords = 'ladder'
+    name = 'ladder'
+    desc = "The ladder up to the life support equipment. "
 ;
 
 ++ hallFrontOxygen: Thing
-        vocabWords = 'oxygen'
-        name = 'oxygen'
-        desc = "Oxygen controls for the ship. "
+    vocabWords = 'oxygen'
+    name = 'oxygen'
+    desc = "Oxygen controls for the ship. "
 ;
 
 ++ hallFrontTemperature: Thing
-        vocabWords = 'temperature'
-        name = 'temperature'
-        desc = "Temperature controls for the ship. "
+    vocabWords = 'temperature'
+    name = 'temperature'
+    desc = "Temperature controls for the ship. "
 ;
 
 /*-----------END FRONT HALL-----------*/
@@ -214,33 +211,33 @@ roomKitchen: Room 'The Kitchen'
 ;
 
 + kitchenCabinets: Thing
-        vocabWords = 'cabinets/cupboards'
-        name = 'cabinets and cupboards'
-        desc = "The cabinets and cupboards of the kitchen. "
+    vocabWords = 'cabinets/cupboards'
+    name = 'cabinets and cupboards'
+    desc = "The cabinets and cupboards of the kitchen. "
 ;
 
 ++ kitchenCabinetFood: Thing
-        vocabWords = 'food'
-        name = 'food'
-        desc = "Food in the cupboards. "
+    vocabWords = 'food'
+    name = 'food'
+    desc = "Food in the cupboards. "
 ;
 
 ++ kitchenCabinetCutlery: Thing
-        vocabWords = 'cutlery'
-        name = 'cutlery'
-        desc = "Cutlery in the cabinets. "
+    vocabWords = 'cutlery'
+    name = 'cutlery'
+    desc = "Cutlery in the cabinets. "
 ;
 
 + kitchenTable: Thing
-        vocabWords = 'table'
-        name = 'table'
-        desc = "The wooden dining table in the kitchen. "
+    vocabWords = 'table'
+    name = 'table'
+    desc = "The wooden dining table in the kitchen. "
 ;
 
 ++ kitchenTableCutlery: Thing
-        vocabWords = 'cutlery'
-        name = 'cutlery'
-        desc = "Cutlery on the table. "
+    vocabWords = 'cutlery'
+    name = 'cutlery'
+    desc = "Cutlery on the table. "
 ;
 
 /*-----------END KITCHEN-----------*/
@@ -254,21 +251,21 @@ roomHallBack: Room 'The Back Hall'
 ;
 
 + hallBackLadder: Thing
-        vocabWords = 'ladder'
-        name = 'ladder'
-        desc = "The ladder up to auxiliary system access. "
+    vocabWords = 'ladder'
+    name = 'ladder'
+    desc = "The ladder up to auxiliary system access. "
 ;
 
 ++ hallBackAirlock: Thing
-        vocabWords = 'airlock'
-        name = 'airlock'
-        desc = "An auxiliary airlock. "
+    vocabWords = 'airlock'
+    name = 'airlock'
+    desc = "An auxiliary airlock. "
 ;
 
 ++ hallBackGravity: Thing
-        vocabWords = 'gravity'
-        name = 'gravity'
-        desc = "The gravity rotor. "
+    vocabWords = 'gravity'
+    name = 'gravity'
+    desc = "The gravity rotor. "
 ;
 
 /*-----------END BACK HALL-----------*/
@@ -281,33 +278,33 @@ roomEngine: Room 'The Engine Room'
 ;
 
 + engineEngine: Thing
-        vocabWords = 'engine'
-        name = 'engine'
-        desc = "The ship's engine. "
+    vocabWords = 'engine'
+    name = 'engine'
+    desc = "The ship's engine. "
 ;
 
 + engineBins: Thing
-         vocabWords = 'equipment bins'
-         name = 'bins'
-         desc = "Bins containing miscellaneous engine equipment. "
+    vocabWords = 'equipment bins'
+    name = 'bins'
+    desc = "Bins containing miscellaneous engine equipment. "
 ;
 
 ++ engineBinTools: Thing
-         vocabWords = 'tools'
-         name = 'tools'
-         desc = "Mechanic's tools. "
+    vocabWords = 'tools'
+    name = 'tools'
+    desc = "Mechanic's tools. "
 ;
 
 ++ engineBinParts: Thing
-         vocabWords = 'parts'
-         name = 'parts'
-         desc = "Miscellaneous engine parts. "
+    vocabWords = 'parts'
+    name = 'parts'
+    desc = "Miscellaneous engine parts. "
 ;
 
 ++ engineBinManual: Thing
-         vocabWords = 'manual'
-         name = 'manual'
-         desc = "Ship engine manual. "
+    vocabWords = 'manual'
+    name = 'manual'
+    desc = "Ship engine manual. "
 ;
 
 /*-----------END ENGINE-----------*/
@@ -321,27 +318,27 @@ roomDormsCrew: Room 'Crew Dorms'
 ;
 
 + dormCrewLadder: Thing
-        vocabWords = 'ladder'
-        name = 'ladder'
-        desc = "Ladder leading up to the Front Hall. "
+    vocabWords = 'ladder'
+    name = 'ladder'
+    desc = "Ladder leading up to the Front Hall. "
 ;
 
 + dormCrewWeapons: Thing
-        vocabWords = 'weapons/guns'
-        name = 'weapons'
-        desc = "The personal weapons of the crew, mostly firearms. "
+    vocabWords = 'weapons/guns'
+    name = 'weapons'
+    desc = "The personal weapons of the crew, mostly firearms. "
 ;
 
 + dormCrewFood: Thing
-        vocabWords = 'food/water'
-        name = 'food'
-        desc = "The crew's rations. "
+    vocabWords = 'food/water'
+    name = 'food'
+    desc = "The crew's rations. "
 ;
 
 + dormCrewClothing: Thing
-        vocabWords = 'clothing/clothes'
-        name = 'clothing'
-        desc = "The crew's wardrob. "
+    vocabWords = 'clothing/clothes'
+    name = 'clothing'
+    desc = "The crew's wardrob. "
 ;
 
 /*-----------END CREW DORM-----------*/
@@ -364,9 +361,9 @@ roomAirLock: Room 'The Air Lock'
 ;
 
 + airLockSwitch: Thing
-        vocabWords = 'door switch'
-        name = 'switch'
-        desc = "The switch controlling the airlock door. "
+    vocabWords = 'door switch'
+    name = 'switch'
+    desc = "The switch controlling the airlock door. "
 ;
 
 /*-----------END AIR LOCK-----------*/
@@ -381,27 +378,27 @@ roomCargoBay: Room 'The Cargo Bay'
 ;
 
 + cargoBayBoxes: Thing
-         vocabWords = 'cargo boxes'
-         name = 'boxes'
-         desc = "Boxes containing various types of cargo. "
+    vocabWords = 'cargo boxes'
+    name = 'boxes'
+    desc = "Boxes containing various types of cargo. "
 ;
 
 ++ cargoBayWeapons: Thing
-         vocabWords = 'weapons/guns'
-         name = 'weapons'
-         desc = "Weapons stored inside the cargo boxes. "
+    vocabWords = 'weapons/guns'
+    name = 'weapons'
+    desc = "Weapons stored inside the cargo boxes. "
 ;
 
 ++ cargoBayParts: Thing
-         vocabWords = 'parts'
-         name = 'parts'
-         desc = "Various parts stored inside the cargo boxes. "
+    vocabWords = 'parts'
+    name = 'parts'
+    desc = "Various parts stored inside the cargo boxes. "
 ;
 
 + cargoBaySuit: Thing
-         vocabWords = 'space suit'
-         name = 'suit'
-         desc = "Space suits for venturing out into the black. "
+    vocabWords = 'space suit'
+    name = 'suit'
+    desc = "Space suits for venturing out into the black. "
 ;
 
 /*-----------END CARGO-----------*/
@@ -415,57 +412,57 @@ roomInfirmary: Room 'The Infirmary'
 ;
 
 + infirmaryCabinets: Thing
-        vocabWords = 'cabinents'
-        name = 'cabinets'
-        desc = "Cabinets containing various medical supplies. "
+    vocabWords = 'cabinents'
+    name = 'cabinets'
+    desc = "Cabinets containing various medical supplies. "
 ;
 
 ++ infirmaryBiofoam: Thing
-        vocabWords = 'biofoam'
-        name = 'biofoam'
-        desc = "Fast-acting wound sealant. "
+    vocabWords = 'biofoam'
+    name = 'biofoam'
+    desc = "Fast-acting wound sealant. "
 ;
 
 ++ infirmaryBandages: Thing
-        vocabWords = 'bandages'
-        name = 'bandages'
-        desc = "Slow-acting wound sealant. "
+    vocabWords = 'bandages'
+    name = 'bandages'
+    desc = "Slow-acting wound sealant. "
 ;
 
 ++ infirmaryPainkillers: Thing
-        vocabWords = 'painkillers'
-        name = 'painkillers'
-        desc = "Mitigate the strain of sustaining injury. "
+    vocabWords = 'painkillers'
+    name = 'painkillers'
+    desc = "Mitigate the strain of sustaining injury. "
 ;
 
 ++ infirmaryAdrenaline: Thing
-        vocabWords = 'adrenaline'
-        name = 'adrenaline'
-        desc = "Provides a very temporary surge of incredible energy. "
+    vocabWords = 'adrenaline'
+    name = 'adrenaline'
+    desc = "Provides a very temporary surge of incredible energy. "
 ;
 
 + infirmaryTables: Thing
-        vocabWords = 'side tables'
-        name = 'tables'
-        desc = "Tables containing various medical supplies. "
+    vocabWords = 'side tables'
+    name = 'tables'
+    desc = "Tables containing various medical supplies. "
 ;
 
 ++ infirmaryDope: Thing
-        vocabWords = 'dope'
-        name = 'dope'
-        desc = "Powerful sedative. "
+    vocabWords = 'dope'
+    name = 'dope'
+    desc = "Powerful sedative. "
 ;
 
 ++ infirmarySyringes: Thing
-        vocabWords = 'syringes'
-        name = 'syringes'
-        desc = "Can be used to administer drugs or extract liquids. "
+    vocabWords = 'syringes'
+    name = 'syringes'
+    desc = "Can be used to administer drugs or extract liquids. "
 ;
 
 ++ infirmaryTools: Thing
-        vocabWords = 'surgical tools'
-        name = 'tools'
-        desc = "Various medical supplies, many of them sharp. "
+    vocabWords = 'surgical tools'
+    name = 'tools'
+    desc = "Various medical supplies, many of them sharp. "
 ;
 
 /*-----------END INFIRMARY-----------*/
@@ -478,21 +475,21 @@ roomDormsPassengers: Room 'Passenger Dorms'
 ;
 
 + dormPassengerDressers: Thing
-        vocabWords = 'dresser/drawer'
-        name = 'dresser'
-        desc = "Storage for the passengers. "
+    vocabWords = 'dresser/drawer'
+    name = 'dresser'
+    desc = "Storage for the passengers. "
 ;
 
 ++ dormPassengerFood: Thing
-        vocabWords = 'food'
-        name = 'food'
-        desc = "Passenger rations. "
+    vocabWords = 'food'
+    name = 'food'
+    desc = "Passenger rations. "
 ;
 
 ++ dormPassengerClothes: Thing
-        vocabWords = 'clothes/clothing'
-        name = 'clothes'
-        desc = "Passenger wardrobe. "
+    vocabWords = 'clothes/clothing'
+    name = 'clothes'
+    desc = "Passenger wardrobe. "
 ;
 
 /*-----------END PASSANGER DORM-----------*/
