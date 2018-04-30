@@ -25,8 +25,8 @@ stats: Thing
 
     // game values
     lights = true
+    locked = nil
     manual = nil
-    locked = nil        
 
     // defaults
 	defTime = 1300
@@ -61,6 +61,7 @@ me: Actor
         stats.time++;
 		stats.oxygen--;
 		stats.temp--;
+
 		inherited(dest, connector, backConnector);
 	}
 ;
