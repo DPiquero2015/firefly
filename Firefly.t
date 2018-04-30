@@ -17,10 +17,41 @@ stats: Thing
 	time = 0
 	oxygen = 100
 	temp = 75
+
+	defTime = 1300
+;
+
+DefineSystemAction(Stats)
+	execSystemAction()
+	{
+		local t = stats.defTime + stats.time;
+		local o = stats.oxygen;
+		local m = stats.temp;
+
+		"
+		System Time:\t<<t>>
+		\nOxygen Levels:\t<<o>>%
+		\nTemperature:\t<<m>>°F
+		";
+	}
+;
+
+VerbRule(Stats)
+	'stats'
+	: StatsAction
+	verbPhrase = 'check/checking the system statistics'
 ;
 
 me: Actor
 	location = roomBridge
+
+	travelTo(dest, connector, backConnector)
+	{
+		stats.time++;
+		stats.oxygen--;
+		stats.temp--;
+		inherited(dest, connector, backConnector);
+	}
 ;
 
 roomBridge: Room 'The Bridge'
