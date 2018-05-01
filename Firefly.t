@@ -5,6 +5,14 @@ gameMain: GameMainDef
 	initialPlayerChar = me
 ;
 
+gameInit: InitObject
+    execute()
+    {
+        stats.doReaver = rand(2) == 0;
+        stats.reaverTime = stats.doReaver ? rand(5) : -1;
+    }
+;
+
 versionInfo: GameID
 	name = 'Firefly'
 	byline = 'by Dmitri Piquero and Ryan Wojtyla'
@@ -26,10 +34,15 @@ stats: Thing
     // game values
     lights = true
     locked = nil
+    airlock = nil
     rigged = nil
 
     // defaults
 	defTime = 1300
+
+    // reavers
+    doReaver = nil
+    reaverTime = -1
 ;
 
 DefineSystemAction(Stats)
@@ -38,15 +51,16 @@ DefineSystemAction(Stats)
 		local t = stats.defTime + stats.time;
 		local o = stats.oxygen;
 		local m = stats.temp;
-        local r = stats.rigged ? 'Yes' : 'No';
+        local r = stats.doReaver ? 'Yes' : 'No';
+        local b = stats.reaverTime;
 
 		"
 		System Time:\t<<t>>
 		\nOxygen Levels:\t<<o>>%
 		\nTemperature:\t<<m>>F
+        \nReaver:\t\t<<r>>
+        \nReaver Time:\t<<b>>
 		";
-        
-        "Rigged:\t<<r>>";
 	}
 ;
 
@@ -57,7 +71,7 @@ VerbRule(Stats)
 ;
 
 DefineTAction(Rig);
-    
+
 VerbRule(Rig)
     'rig' singleDobj
     : RigAction
@@ -72,6 +86,15 @@ me: Actor
         stats.time++;
 		stats.oxygen--;
 		stats.temp--;
+        
+        if (stats.doReaver && stats.time > stats.reaverTime)
+            finishGameMsg('Reavers boarded the ship. There was nothing that could be done. Any crew onboard have either been killed or will soon wish they had been. ', [finishOptionQuit, finishOptionRestart]);
+        
+        if (stats.oxygen <= 0)
+            finishGameMsg('The oxygen levels on the ship have depleted. Any life onboard has suffocated and died. ', [finishOptionQuit, finishOptionRestart]);
+        
+        if (stats.temp <= -20)
+            finishGameMsg('The ship\' temperature has dropped too low. Any life onboard has frozen and died. ', [finishOptionQuit, finishOptionRestart]);
 
 		inherited(dest, connector, backConnector);
 	}
@@ -93,25 +116,25 @@ roomBridge: Room 'The Bridge'
 
 ++ bridgeControlsNavigation: Fixture
 	vocabWords = 'navigation'
-	name = 'navigation controls'
+	name = 'Navigation Controls'
 	desc = "See the navigation controls and joystick. Everything has been powered down. "
 ;
 
 +++ bridgeTheStick: Thing
-	vocabWords = 'joystick'
-	name = 'the joystick'
-	desc = "Moving the stick has no effect. "
+	vocabWords = 'stick/joystick'
+	name = 'Joystick'
+	desc = "A joystick that looks like it controls some part of the ship. Moving it has no effect. "
 ;
 
 ++ bridgeControlsSystem: Fixture
 	vocabWords = 'system'
-	name = 'system controls'
+	name = 'System Controls'
 	desc = "See the power controls, door controls, and airlock controls. "
 ;
 
 +++ bridgeControlsPower: Switch
 	vocabWords = 'power'
-	name = 'power controls'
+	name = 'Power Controls'
 	desc = "Can toggle the lights. "
     isOn = true
     makeOn(val)
@@ -122,51 +145,86 @@ roomBridge: Room 'The Bridge'
 ;
 
 +++ bridgeControlsDoors: Lockable, Fixture
-	vocabWords = 'doors'
-	name = 'door controls'
+	vocabWords = 'door*doors'
+	name = 'Coor Controls'
 	desc = "Can lock and unlock the ship's doors. "
     initiallyLocked = nil
     dobjFor(Lock)
     {
+        verify()
+        {
+            if (isLocked)
+                illogicalAlready('The doors are already locked. ');
+        }
         action()
         {
-            inherited();
+            makeLoked(true);
             
-            if (!stats.locked)
-            {
-                stats.locked = true;
-                "The doors are locked. ";
-            }
-            else
-                "The doors are already locked. ";
+            stats.locked = true;
+            
+            "The doors are now locked. ";
         }
     }
     dobjFor(Unlock)
     {
+        verify()
+        {
+            if (!isLocked)
+                illogicalAlready('The doors are already unlocked. ');
+        }
         action()
         {
-            inherited();
+            makeLoked(nil);
             
-            if (stats.locked)
-            {
-                stats.locked = nil;
-                "The doors are unlocked. ";
-            }
-            else
-                "The doors are already unlocked. ";
+            stats.locked = nil;
+            
+            "The doors are now unlocked. ";
         }
     }
 ;
 
-+++ bridgeControlsCargoBay: Thing
++++ bridgeControlsCargoBay: Openable, Fixture
 	vocabWords = 'airlock'
-	name = 'airlock controls'
+	name = 'Airlock Controls'
 	desc = "Can open and close the cargo bay airlock. "
+    initiallyOpen = nil
+    dobjFor(Open)
+    {
+        verify()
+        {
+            if (isOpen)
+                illogicalAlready('The cargo bay airlock is already open. ');
+        }
+        action()
+        {
+            inherited();
+            
+            stats.airlock = true;
+            
+            "The cargo bay airlock is now open. ";
+        }
+    }
+    dobjFor(Close)
+    {
+        verify()
+        {
+            if (!isOpen)
+                illogicalAlready('The cargo bay airlock is already closed. ');
+        }
+        action()
+        {
+            inherited();
+            
+            stats.airlock = nil;
+            
+            "The cargo bay airlock is now closed. ";
+        }
+    }
 ;
 
-++ bridgeControlsComms: Thing
-	vocabWords = 'comms'
-	name = 'communication controls'
+++ bridgeControlsComms: Fixture
+	vocabWords = 'comm*comms'
+	name = 'Communication Controls'
 	desc = "Can be rigged to emit a static that may cause passing ships to stop and investigate. "
     dobjFor(Rig)
     {
@@ -181,19 +239,35 @@ roomBridge: Room 'The Bridge'
 + bridgeWindows: Fixture
 	vocabWords = 'window*windows'
 	name = 'windows'
-	desc = "See space, at the corner of no and where..."
+    descriptions = [
+        'Space, at the corner of no and where... ',
+        'Nothing but the black. '
+    ]
+    dobjFor(LookIn) remapTo(LookThrough, bridgeWindows)
+    dobjFor(Examine) remapTo(LookThrough, bridgeWindows)
+	dobjFor(LookThrough)
+    {
+        action()
+        {
+            if (stats.doReaver && stats.time == stats.reaverTime)
+                "An old, heavily modified ship is drifting close.
+                On it's bloody red exterior are skeletons draped accross the bow.
+                What appear to be magnetic grapplers seem to be moving closer to the ship.
+                This can only mean reavers. ";
+            else
+            {
+                local r = rand(descriptions);
+                "<<r>> ";
+            }
+        }
+    }
 ;
 
 + bridgeLadder: Fixture
 	vocabWords = 'ladder'
 	name = 'ladder'
-	desc = "A ladder leading down to an airlock. "
+	desc = "A ladder leading down to an airlock. It appears to be sealed shut. "
 ;
-
-++ bridgeAirlock: Fixture
-	vocabWords = 'airlock'
-	name = 'airlock'
-	desc = "An airlock. It seems to be sealed shut. "
 ;
 
 /*-----------END BRIDGE-----------*/
