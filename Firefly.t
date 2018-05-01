@@ -35,10 +35,19 @@ stats: Thing
     lights = true
     locked = nil
     airlock = nil
-    rigged = nil
 
     // defaults
 	defTime = 1300
+    
+    // ship
+    shipTime = 0
+    shipDelay = 15
+    doShip = rigged &&
+        time >= shipTime &&
+        time < shipTime + shipDelay
+    rigged = nil
+    answered = nil
+    boardPeaceful = nil
 
     // reavers
     doReaver = nil
@@ -48,18 +57,11 @@ stats: Thing
 DefineSystemAction(Stats)
 	execSystemAction()
 	{
-		local t = stats.defTime + stats.time;
-		local o = stats.oxygen;
-		local m = stats.temp;
-        local r = stats.doReaver ? 'Yes' : 'No';
-        local b = stats.reaverTime;
-
 		"
-		System Time:\t<<t>>
-		\nOxygen Levels:\t<<o>>%
-		\nTemperature:\t<<m>>F
-        \nReaver:\t\t<<r>>
-        \nReaver Time:\t<<b>>
+		System Time:\t<<stats.defTime + stats.time>>
+		\nOxygen Levels:\t<<stats.oxygen>>%
+		\nTemperature:\t<<stats.temp>>F
+        \nShip:\t<<stats.doShip ? 'Y' : 'N'>>
 		";
 	}
 ;
@@ -78,6 +80,14 @@ VerbRule(Rig)
     verbPhrase = 'rig/rigging (what)'
 ;
 
+DefineTAction(Answer);
+
+VerbRule(Answer)
+    'answer' singleDobj
+    : AnswerAction
+    verbPhrase = 'answer/answering (what)'
+;
+
 me: Actor
 	location = roomBridge
 
@@ -88,13 +98,20 @@ me: Actor
 		stats.temp--;
         
         if (stats.doReaver && stats.time > stats.reaverTime)
-            finishGameMsg('Reavers boarded the ship. There was nothing that could be done. Any crew onboard have either been killed or will soon wish they had been. ', [finishOptionQuit, finishOptionRestart]);
+            finishGameMsg('Reavers boarded the ship.
+                There was nothing that could be done.
+                Any crew onboard have either been killed or will soon wish they had been. ',
+                          [finishOptionQuit, finishOptionRestart]);
         
         if (stats.oxygen <= 0)
-            finishGameMsg('The oxygen levels on the ship have depleted. Any life onboard has suffocated and died. ', [finishOptionQuit, finishOptionRestart]);
+            finishGameMsg('The oxygen levels on the ship have depleted.
+                Any life onboard has suffocated and died. ',
+                          [finishOptionQuit, finishOptionRestart]);
         
         if (stats.temp <= -20)
-            finishGameMsg('The ship\' temperature has dropped too low. Any life onboard has frozen and died. ', [finishOptionQuit, finishOptionRestart]);
+            finishGameMsg('The ship\' temperature has dropped too low.
+                Any life onboard has frozen and died. ',
+                          [finishOptionQuit, finishOptionRestart]);
 
 		inherited(dest, connector, backConnector);
 	}
@@ -111,13 +128,15 @@ roomBridge: Room 'The Bridge'
 + bridgeConsoles: Fixture
     vocabWords = 'console*consoles'
 	name = 'Bridge Consoles'
-	desc = "See the navigation controls, system controls, and comms. "
+	desc = "The ship consoles.
+        \bThe navigation controls, system controls, and comms are layed out. "
 ;
 
 ++ bridgeControlsNavigation: Fixture
 	vocabWords = 'navigation'
 	name = 'Navigation Controls'
-	desc = "See the navigation controls and joystick. Everything has been powered down. "
+	desc = "The navigation controls.
+        \bNothing seems to have power. A joystick can still be used though. "
 ;
 
 +++ bridgeTheStick: Thing
@@ -129,13 +148,14 @@ roomBridge: Room 'The Bridge'
 ++ bridgeControlsSystem: Fixture
 	vocabWords = 'system'
 	name = 'System Controls'
-	desc = "See the power controls, door controls, and airlock controls. "
+	desc = "The system controls.
+        \bThe power, door, and airlock controls are scattered around. "
 ;
 
 +++ bridgeControlsPower: Switch
 	vocabWords = 'power'
 	name = 'Power Controls'
-	desc = "Can toggle the lights. "
+	desc = "Switches that seem like they can toggle the lights. "
     isOn = true
     makeOn(val)
     {
@@ -147,7 +167,7 @@ roomBridge: Room 'The Bridge'
 +++ bridgeControlsDoors: Lockable, Fixture
 	vocabWords = 'door*doors'
 	name = 'Coor Controls'
-	desc = "Can lock and unlock the ship's doors. "
+	desc = "Buttons that look like they can lock and unlock the ship's doors. "
     initiallyLocked = nil
     dobjFor(Lock)
     {
@@ -158,10 +178,9 @@ roomBridge: Room 'The Bridge'
         }
         action()
         {
-            makeLoked(true);
+            makeLocked(true);
             
             stats.locked = true;
-            
             "The doors are now locked. ";
         }
     }
@@ -174,10 +193,9 @@ roomBridge: Room 'The Bridge'
         }
         action()
         {
-            makeLoked(nil);
+            makeLocked(nil);
             
             stats.locked = nil;
-            
             "The doors are now unlocked. ";
         }
     }
@@ -186,22 +204,21 @@ roomBridge: Room 'The Bridge'
 +++ bridgeControlsCargoBay: Openable, Fixture
 	vocabWords = 'airlock'
 	name = 'Airlock Controls'
-	desc = "Can open and close the cargo bay airlock. "
+	desc = "Buttons that seem like they can open and close the cargo bay airlock. "
     initiallyOpen = nil
     dobjFor(Open)
     {
         verify()
         {
             if (isOpen)
-                illogicalAlready('The cargo bay airlock is already open. ');
+                illogicalAlready('The airlock is already open. ');
         }
         action()
         {
             inherited();
             
             stats.airlock = true;
-            
-            "The cargo bay airlock is now open. ";
+            "The airlock is now open. ";
         }
     }
     dobjFor(Close)
@@ -209,15 +226,14 @@ roomBridge: Room 'The Bridge'
         verify()
         {
             if (!isOpen)
-                illogicalAlready('The cargo bay airlock is already closed. ');
+                illogicalAlready('The airlock is already closed. ');
         }
         action()
         {
             inherited();
             
             stats.airlock = nil;
-            
-            "The cargo bay airlock is now closed. ";
+            "The airlock is now closed. ";
         }
     }
 ;
@@ -225,42 +241,64 @@ roomBridge: Room 'The Bridge'
 ++ bridgeControlsComms: Fixture
 	vocabWords = 'comm*comms'
 	name = 'Communication Controls'
-	desc = "Can be rigged to emit a static that may cause passing ships to stop and investigate. "
+    description = 'The communication controls.
+        \bCan be rigged to emit a static that may cause passing ships to stop and investigate. '
+	desc
+    {
+        "<<description>>";
+    }
     dobjFor(Rig)
     {
+        verify()
+        {
+            if (stats.rigged)
+                illogicalAlready('The comms have already been rigged. ');
+        }
         action()
         {
             stats.rigged = true;
             "The comms have been rigged. ";
+            
+            description = 'The communication controls.
+                \bThe screen lights up with the face of a ship\'s captain. Their hail may be answered. ';
         }
     }
+    dobjFor(Answer)
+    {
+        verify()
+        {
+            if (stats.doShip && stats.answered)
+                illogicalAlready('The captain\'s hail has already been answered. ');
+            if (!stats.doShip)
+                illogicalAlready('There is nothing to answer. ');
+        }
+        action()
+        {
+            "The ship arrives and a spare part is given by the captain. ";
+        }
+     }
 ;
 
 + bridgeWindows: Fixture
 	vocabWords = 'window*windows'
 	name = 'windows'
-    descriptions = [
-        'Space, at the corner of no and where... ',
-        'Nothing but the black. '
+    description = [
+        'Stuck here at the corner of no and where... ',
+        'Nothing but the black. ',
+        'Well... Here I am. '
     ]
-    dobjFor(LookIn) remapTo(LookThrough, bridgeWindows)
-    dobjFor(Examine) remapTo(LookThrough, bridgeWindows)
-	dobjFor(LookThrough)
+    desc
     {
-        action()
-        {
-            if (stats.doReaver && stats.time == stats.reaverTime)
+        if (stats.doReaver && stats.time == stats.reaverTime)
                 "An old, heavily modified ship is drifting close.
                 On it's bloody red exterior are skeletons draped accross the bow.
                 What appear to be magnetic grapplers seem to be moving closer to the ship.
                 This can only mean reavers. ";
-            else
-            {
-                local r = rand(descriptions);
-                "<<r>> ";
-            }
-        }
+        else
+            "<<rand(description)>> ";
     }
+    
+    dobjFor(LookThrough) remapTo(Examine, bridgeWindows)
 ;
 
 + bridgeLadder: Fixture
@@ -275,7 +313,8 @@ roomBridge: Room 'The Bridge'
 /*----------BEGIN FRONT HALL----------*/
 
 roomHallFront: Room 'The Front Hall'
-	"The front hall. To the north is the bridge. To the south is the kitchen. Below are the crew's dorms. "
+	"The front hall. To the north is the bridge. To the south is the kitchen. Below are the crew's dorms.
+    \bTo the side is a ladder that goes past the roof. "
 	north = roomBridge
 	south = roomKitchen
 	down = roomDormsCrew
@@ -292,20 +331,21 @@ roomHallFront: Room 'The Front Hall'
     }
 ;
 
-+ hallFrontLadder: Thing
++ hallFrontLadder: Fixture
     vocabWords = 'ladder'
     name = 'ladder'
-    desc = "The ladder up to the life support equipment. "
+    desc = "The ladder up to the life support equipment.
+        \bControls for the oxygen supply and temperature regulator sit at the top. "
 ;
 
-++ hallFrontOxygen: Thing
+++ hallFrontOxygen: Fixture
     vocabWords = 'oxygen'
     name = 'oxygen'
     desc = "Oxygen controls for the ship. "
 ;
 
-++ hallFrontTemperature: Thing
-    vocabWords = 'temperature'
+++ hallFrontTemperature: Fixture
+    vocabWords = 'temperature regulator'
     name = 'temperature'
     desc = "Temperature controls for the ship. "
 ;
@@ -315,12 +355,13 @@ roomHallFront: Room 'The Front Hall'
 /*----------BEGIN KITCHEN----------*/
 
 roomKitchen: Room 'The Kitchen'
-	"The kitchen. To the north is the front hall. To the south is the back hall. "
+	"The kitchen. To the north is the front hall. To the south is the back hall.
+    \bCabinets and cupboards dot the walls while a large wooden table rests in the center. "
 	north = roomHallFront
 	south = roomHallBack
 ;
 
-+ kitchenCabinets: Thing
++ kitchenCabinets: Fixture
     vocabWords = 'cabinets/cupboards'
     name = 'cabinets and cupboards'
     desc = "The cabinets and cupboards of the kitchen. "
@@ -338,7 +379,7 @@ roomKitchen: Room 'The Kitchen'
     desc = "Cutlery in the cabinets. "
 ;
 
-+ kitchenTable: Thing
++ kitchenTable: Fixture
     vocabWords = 'table'
     name = 'table'
     desc = "The wooden dining table in the kitchen. "
@@ -355,24 +396,25 @@ roomKitchen: Room 'The Kitchen'
 /*----------BEGIN BACK HALL----------*/
 
 roomHallBack: Room 'The Back Hall'
-	"The back hall. To the north is the kitchen. To the south is the engine room. "
+	"The back hall. To the north is the kitchen. To the south is the engine room.
+    \bTo the side is a ladder. "
 	north = roomKitchen
 	south = roomEngine
 ;
 
-+ hallBackLadder: Thing
++ hallBackLadder: Fixture
     vocabWords = 'ladder'
     name = 'ladder'
     desc = "The ladder up to auxiliary system access. "
 ;
 
-++ hallBackAirlock: Thing
+++ hallBackAirlock: Fixture
     vocabWords = 'airlock'
     name = 'airlock'
     desc = "An auxiliary airlock. "
 ;
 
-++ hallBackGravity: Thing
+++ hallBackGravity: Fixture
     vocabWords = 'gravity'
     name = 'gravity'
     desc = "The gravity rotor. "
@@ -383,17 +425,18 @@ roomHallBack: Room 'The Back Hall'
 /*----------BEGIN ENGINE----------*/
 
 roomEngine: Room 'The Engine Room'
-	"The engine room. To the north is the back hall. "
+	"The engine room. To the north is the back hall.
+    \bIn the middle sits the engine, and scattered around are various equipment bins. "
 	north = roomHallBack
 ;
 
-+ engineEngine: Thing
++ engineEngine: Fixture
     vocabWords = 'engine'
     name = 'engine'
     desc = "The ship's engine. "
 ;
 
-+ engineBins: Thing
++ engineBins: Fixture
     vocabWords = 'equipment bins'
     name = 'bins'
     desc = "Bins containing miscellaneous engine equipment. "
@@ -422,12 +465,13 @@ roomEngine: Room 'The Engine Room'
 /*----------BEIGN CREW DORM----------*/
 
 roomDormsCrew: Room 'Crew Dorms'
-	"The crew's dorms. To the south is the catwalk. Above is the front hall. "
+	"The crew's dorms. To the south is the catwalk. Above is the front hall.
+    \bAt the front is a ladder. "
 	south = roomCatwalk
 	up = roomHallFront
 ;
 
-+ dormCrewLadder: Thing
++ dormCrewLadder: Fixture
     vocabWords = 'ladder'
     name = 'ladder'
     desc = "Ladder leading up to the Front Hall. "
@@ -466,11 +510,12 @@ roomCatwalk: Room 'The Catwalk'
 /*----------BEGIN AIR LOCK-----------*/
 
 roomAirLock: Room 'The Air Lock'
-	"The air lock before the cargo bay. To the south is the cargo bay. "
+	"The air lock before the cargo bay. To the south is the cargo bay.
+    \bThere is a switch on the wall. "
 	south = roomCargoBay
 ;
 
-+ airLockSwitch: Thing
++ airLockSwitch: Fixture
     vocabWords = 'door switch'
     name = 'switch'
     desc = "The switch controlling the airlock door. "
@@ -481,13 +526,14 @@ roomAirLock: Room 'The Air Lock'
 /*----------BEGIN CARGO----------*/
 
 roomCargoBay: Room 'The Cargo Bay'
-	"The cargo bay. To the north is the air lock. To the south is the infirmary. Above is the catwalk. "
+	"The cargo bay. To the north is the air lock. To the south is the infirmary. Above is the catwalk.
+    \bTaking up most of the space are large cargo boxes, in the corner space suits can be seen. "
 	north = roomAirLock
 	south = roomInfirmary
 	up = roomCatwalk
 ;
 
-+ cargoBayBoxes: Thing
++ cargoBayBoxes: Fixture
     vocabWords = 'cargo boxes'
     name = 'boxes'
     desc = "Boxes containing various types of cargo. "
@@ -516,12 +562,13 @@ roomCargoBay: Room 'The Cargo Bay'
 /*---------BEGIN INFIRMARY----------*/
 
 roomInfirmary: Room 'The Infirmary'
-	"The infirmary. To the north is the cargo bay. To the south are the passengers' dorms. "
+	"The infirmary. To the north is the cargo bay. To the south are the passengers' dorms.
+    \bCabinets line the walls while small side tables sit unused. "
 	north = roomCargoBay
 	south = roomDormsPassengers
 ;
 
-+ infirmaryCabinets: Thing
++ infirmaryCabinets: Fixture
     vocabWords = 'cabinents'
     name = 'cabinets'
     desc = "Cabinets containing various medical supplies. "
@@ -551,7 +598,7 @@ roomInfirmary: Room 'The Infirmary'
     desc = "Provides a very temporary surge of incredible energy. "
 ;
 
-+ infirmaryTables: Thing
++ infirmaryTables: Fixture
     vocabWords = 'side tables'
     name = 'tables'
     desc = "Tables containing various medical supplies. "
@@ -580,11 +627,12 @@ roomInfirmary: Room 'The Infirmary'
 /*----------BEGIN PASSANGER DORM----------*/
 
 roomDormsPassengers: Room 'Passenger Dorms'
-	"The passenger's dorms. To the north is the infirmary. "
+	"The passenger's dorms. To the north is the infirmary.
+    \bDressers along the wall hold passengers' belongings. "
 	north = roomInfirmary
 ;
 
-+ dormPassengerDressers: Thing
++ dormPassengerDressers: Fixture
     vocabWords = 'dresser/drawer'
     name = 'dresser'
     desc = "Storage for the passengers. "
