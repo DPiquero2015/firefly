@@ -26,7 +26,7 @@ stats: Thing
     // game values
     lights = true
     locked = nil
-    manual = nil
+    rigged = nil
 
     // defaults
 	defTime = 1300
@@ -38,19 +38,30 @@ DefineSystemAction(Stats)
 		local t = stats.defTime + stats.time;
 		local o = stats.oxygen;
 		local m = stats.temp;
+        local r = stats.rigged ? 'Yes' : 'No';
 
 		"
 		System Time:\t<<t>>
 		\nOxygen Levels:\t<<o>>%
 		\nTemperature:\t<<m>>F
 		";
+        
+        "Rigged:\t<<r>>";
 	}
 ;
 
 VerbRule(Stats)
-	'stats'
+	'stats' | 'status'
 	: StatsAction
 	verbPhrase = 'check/checking the system statistics'
+;
+
+DefineTAction(Rig);
+    
+VerbRule(Rig)
+    'rig' singleDobj
+    : RigAction
+    verbPhrase = 'rig/rigging (what)'
 ;
 
 me: Actor
@@ -69,23 +80,14 @@ me: Actor
 /*----------BEGIN BRIDGE----------*/
 
 roomBridge: Room 'The Bridge'
-	"The bridge of the ship. To the south is the front hall. Inside there are consoles, windows looking out, and to the side a ladder. "
+	"The bridge of the ship. To the south is the front hall.
+    \bInside there are consoles, windows looking out, and to the side a ladder. "
 	south = roomHallFront
-    dobjFor(Travel)
-    {
-        check()
-        {
-            if(stats.locked)
-            {
-                failCheck('The doors are locked. ');
-            }
-        }
-    }
 ;
 
 + bridgeConsoles: Fixture
-    vocabWords = 'consoles'
-	name = 'the consoles'
+    vocabWords = 'console*consoles'
+	name = 'Bridge Consoles'
 	desc = "See the navigation controls, system controls, and comms. "
 ;
 
@@ -96,7 +98,7 @@ roomBridge: Room 'The Bridge'
 ;
 
 +++ bridgeTheStick: Thing
-	vocabWords = 'stick/joystick'
+	vocabWords = 'joystick'
 	name = 'the joystick'
 	desc = "Moving the stick has no effect. "
 ;
@@ -128,45 +130,67 @@ roomBridge: Room 'The Bridge'
     {
         action()
         {
-            stats.locked = true;
-            "Doors are locked. ";
+            inherited();
+            
+            if (!stats.locked)
+            {
+                stats.locked = true;
+                "The doors are locked. ";
+            }
+            else
+                "The doors are already locked. ";
         }
     }
     dobjFor(Unlock)
     {
         action()
         {
-            stats.locked = nil;
-            "Doors are unlocked. ";
+            inherited();
+            
+            if (stats.locked)
+            {
+                stats.locked = nil;
+                "The doors are unlocked. ";
+            }
+            else
+                "The doors are already unlocked. ";
         }
     }
 ;
 
-+++ bridgeControlsAirlock: Thing
++++ bridgeControlsCargoBay: Thing
 	vocabWords = 'airlock'
 	name = 'airlock controls'
-	desc = "Can open and close the various airlocks on the ship. "
+	desc = "Can open and close the cargo bay airlock. "
 ;
 
 ++ bridgeControlsComms: Thing
 	vocabWords = 'comms'
 	name = 'communication controls'
 	desc = "Can be rigged to emit a static that may cause passing ships to stop and investigate. "
+    dobjFor(Rig)
+    {
+        action()
+        {
+            stats.rigged = true;
+            "The comms have been rigged. ";
+        }
+    }
 ;
 
-+ bridgeWindows: Thing
-	vocabWords = 'windows'
++ bridgeWindows: Fixture
+	vocabWords = 'window*windows'
 	name = 'windows'
 	desc = "See space, at the corner of no and where..."
 ;
 
-+ bridgeLadder: Thing
++ bridgeLadder: Fixture
 	vocabWords = 'ladder'
 	name = 'ladder'
 	desc = "A ladder leading down to an airlock. "
 ;
 
-++ bridgeAirlock: Thing
+++ bridgeAirlock: Fixture
 	vocabWords = 'airlock'
 	name = 'airlock'
 	desc = "An airlock. It seems to be sealed shut. "
@@ -181,6 +205,17 @@ roomHallFront: Room 'The Front Hall'
 	north = roomBridge
 	south = roomKitchen
 	down = roomDormsCrew
+    canTravelerPass(traveler)
+    {
+        return inherited(traveler) && !stats.locked;
+    }
+    explainTravelBarrier(traveler)
+    {
+        if (stats.locked)
+            "The door is locked. ";
+        else
+            inherited(traveler);
+    }
 ;
 
 + hallFrontLadder: Thing
