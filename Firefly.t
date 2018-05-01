@@ -8,8 +8,8 @@ gameMain: GameMainDef
 gameInit: InitObject
     execute()
     {
-        stats.doReaver = rand(2) == 0;
-        stats.reaverTime = stats.doReaver ? rand(5) : -1;
+        stats.doReaver = rand(10) == 0;
+        stats.reaverTime = stats.doReaver ? rand(60) : -1;
     }
 ;
 
@@ -35,6 +35,9 @@ stats: Thing
     lights = true
     locked = nil
     airlock = nil
+    manual = nil
+    knowledge = nil
+    catalyzer = nil
 
     // defaults
 	defTime = 1300
@@ -61,13 +64,13 @@ DefineSystemAction(Stats)
 		System Time:\t<<stats.defTime + stats.time>>
 		\nOxygen Levels:\t<<stats.oxygen>>%
 		\nTemperature:\t<<stats.temp>>F
-        \nShip:\t<<stats.doShip ? 'Y' : 'N'>>
+        \nAirlock:\t<<stats.airlock ? 'Y' : 'N'>>
 		";
 	}
 ;
 
 VerbRule(Stats)
-	'stats' | 'status'
+	('stats' | 'status')
 	: StatsAction
 	verbPhrase = 'check/checking the system statistics'
 ;
@@ -86,6 +89,22 @@ VerbRule(Answer)
     'answer' singleDobj
     : AnswerAction
     verbPhrase = 'answer/answering (what)'
+;
+
+DefineTAction(Diagnose);
+
+VerbRule(Diagnose)
+    'diagnose' singleDobj
+    : DiagnoseAction
+    verbPhrase = 'diagnose/diagnosing (what)'
+;
+
+DefineTAction(Repair);
+
+VerbRule(Repair)
+    ('repair' | 'fix') singleDobj
+    : RepairAction
+    verbPhrase = 'repair/repairing (what)'
 ;
 
 me: Actor
@@ -139,7 +158,7 @@ roomBridge: Room 'The Bridge'
         \bNothing seems to have power. A joystick can still be used though. "
 ;
 
-+++ bridgeTheStick: Thing
++++ bridgeTheStick: Fixture
 	vocabWords = 'stick/joystick'
 	name = 'Joystick'
 	desc = "A joystick that looks like it controls some part of the ship. Moving it has no effect. "
@@ -241,11 +260,11 @@ roomBridge: Room 'The Bridge'
 ++ bridgeControlsComms: Fixture
 	vocabWords = 'comm*comms'
 	name = 'Communication Controls'
-    description = 'The communication controls.
-        \bCan be rigged to emit a static that may cause passing ships to stop and investigate. '
+    description = 'Can be rigged to emit a static that may cause passing ships to stop and investigate. '
 	desc
     {
-        "<<description>>";
+        "The communication controls.
+        \b<<description>>";
     }
     dobjFor(Rig)
     {
@@ -259,8 +278,7 @@ roomBridge: Room 'The Bridge'
             stats.rigged = true;
             "The comms have been rigged. ";
             
-            description = 'The communication controls.
-                \bThe screen lights up with the face of a ship\'s captain. Their hail may be answered. ';
+            description = 'The screen lights up with the face of a ship\'s captain. Their hail may be answered. ';
         }
     }
     dobjFor(Answer)
@@ -270,11 +288,12 @@ roomBridge: Room 'The Bridge'
             if (stats.doShip && stats.answered)
                 illogicalAlready('The captain\'s hail has already been answered. ');
             if (!stats.doShip)
-                illogicalAlready('There is nothing to answer. ');
+                illogicalNow('There is nothing to answer. ');
         }
         action()
         {
             "The ship arrives and a spare part is given by the captain. ";
+            stats.boardPeaceful = true;
         }
      }
 ;
@@ -290,10 +309,10 @@ roomBridge: Room 'The Bridge'
     desc
     {
         if (stats.doReaver && stats.time == stats.reaverTime)
-                "An old, heavily modified ship is drifting close.
-                On it's bloody red exterior are skeletons draped accross the bow.
-                What appear to be magnetic grapplers seem to be moving closer to the ship.
-                This can only mean reavers. ";
+            "An old, heavily modified ship is drifting close.
+            On it's bloody red exterior are skeletons draped accross the bow.
+            What appear to be magnetic grapplers seem to be moving closer to the ship.
+            This can only mean reavers. ";
         else
             "<<rand(description)>> ";
     }
@@ -371,12 +390,14 @@ roomKitchen: Room 'The Kitchen'
     vocabWords = 'food'
     name = 'food'
     desc = "Food in the cupboards. "
+    isPlural = true
 ;
 
 ++ kitchenCabinetCutlery: Thing
     vocabWords = 'cutlery'
     name = 'cutlery'
     desc = "Cutlery in the cabinets. "
+    isPlural = true
 ;
 
 + kitchenTable: Fixture
@@ -389,6 +410,7 @@ roomKitchen: Room 'The Kitchen'
     vocabWords = 'cutlery'
     name = 'cutlery'
     desc = "Cutlery on the table. "
+    isPlural = true
 ;
 
 /*-----------END KITCHEN-----------*/
@@ -433,31 +455,90 @@ roomEngine: Room 'The Engine Room'
 + engineEngine: Fixture
     vocabWords = 'engine'
     name = 'engine'
-    desc = "The ship's engine. "
+    description = 'It is currently broken down, and whatever problems it has need to be diagnosed. '
+	desc
+    {
+        "The ship's engine.
+        \b<<description>>";
+    }
+    dobjFor(Diagnose) remapTo(Examine, engineEngine)
+    dobjFor(Examine)
+    {
+        verify()
+        {
+            if (stats.knowledge)
+                illogicalAlready('The engine has already been examined, a new catalyzer is needed. ');
+        }
+        action()
+        {
+            if (stats.manual || (!stats.manual && rand(4) == 0))
+            {
+                stats.knowledge = true;
+                description = 'It is currently broken down, but can be fixed with a new catalyzer. ';
+                "It appears that the catalyzer on the port compression coil blew. That's where the trouble started. ";
+            }
+            else
+                "The engine is broken, and it is not obvious why. ";
+        }
+    }
+    dobjFor(Repair)
+    {
+        verify()
+        {
+            if (!stats.catalyzer)
+                illogicalNow('The engine can\'t be repaired without the right parts. ');
+        }
+        action()
+        {
+            if (stats.catalyzer)
+            {
+                finishGameMsg('Plugging in the catalyer, the engine begins to turn.
+                    Power is restored and air begins to circulate throughout the ship.
+                    The crew survived. ',
+                              [finishOptionQuit, finishOptionRestart]);
+            }
+        }
+    }
 ;
 
 + engineBins: Fixture
     vocabWords = 'equipment bins'
-    name = 'bins'
-    desc = "Bins containing miscellaneous engine equipment. "
+    name = 'equiment bins'
+    desc = "Bins containing miscellaneous engine equipment.
+        \bTools, parts, and a manual can be found in the various bins. "
 ;
 
 ++ engineBinTools: Thing
     vocabWords = 'tools'
     name = 'tools'
     desc = "Mechanic's tools. "
+    isPlural = true
 ;
 
 ++ engineBinParts: Thing
     vocabWords = 'parts'
     name = 'parts'
     desc = "Miscellaneous engine parts. "
+    isPlural = true
 ;
 
-++ engineBinManual: Thing
+++ engineBinManual: Readable
     vocabWords = 'manual'
     name = 'manual'
     desc = "Ship engine manual. "
+    dobjFor(Read)
+    {
+        verify()
+        {
+            if (stats.manual)
+                illogicalAlready('The manual has already been read, there\'s not much more that can be got out of it. ');
+        }
+        action()
+        {
+            stats.manual = true;
+            "Reading the manual gives insight into the construction of the engine. ";
+        }
+    }
 ;
 
 /*-----------END ENGINE-----------*/
@@ -481,18 +562,21 @@ roomDormsCrew: Room 'Crew Dorms'
     vocabWords = 'weapons/guns'
     name = 'weapons'
     desc = "The personal weapons of the crew, mostly firearms. "
+    isPlural = true
 ;
 
 + dormCrewFood: Thing
     vocabWords = 'food/water'
     name = 'food'
     desc = "The crew's rations. "
+    isPlural = true
 ;
 
 + dormCrewClothing: Thing
     vocabWords = 'clothing/clothes'
     name = 'clothing'
-    desc = "The crew's wardrob. "
+    desc = "The crew's wardrobe. "
+    isPlural = true
 ;
 
 /*-----------END CREW DORM-----------*/
@@ -503,6 +587,19 @@ roomCatwalk: Room 'The Catwalk'
 	"The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. "
 	north = roomDormsCrew
 	down = roomCargoBay
+    dobjFor(Enter)
+    {
+        action()
+        {
+            inherited();
+            
+            if (stats.airlock)
+                finishGameMsg('Sucked out into space, the captain of the ship <<cargoBaySuit.isWornBy(me)
+                      ? 'Drifted in space until their space suit ran out of Oxygen. '
+                      : 'Quickly suffocated and died from the lack of pressure and Oxygen in the cold depths of nothing. '>>',
+                              [finishOptionQuit, finishOptionRestart]);
+        }
+    }
 ;
 
 /*----------END CATWALK-----------*/
@@ -535,7 +632,7 @@ roomCargoBay: Room 'The Cargo Bay'
 
 + cargoBayBoxes: Fixture
     vocabWords = 'cargo boxes'
-    name = 'boxes'
+    name = 'cargo boxes'
     desc = "Boxes containing various types of cargo. "
 ;
 
@@ -543,17 +640,19 @@ roomCargoBay: Room 'The Cargo Bay'
     vocabWords = 'weapons/guns'
     name = 'weapons'
     desc = "Weapons stored inside the cargo boxes. "
+    isPlural = true
 ;
 
 ++ cargoBayParts: Thing
     vocabWords = 'parts'
     name = 'parts'
     desc = "Various parts stored inside the cargo boxes. "
+    isPlural = true
 ;
 
-+ cargoBaySuit: Thing
++ cargoBaySuit: Wearable
     vocabWords = 'space suit'
-    name = 'suit'
+    name = 'space suit'
     desc = "Space suits for venturing out into the black. "
 ;
 
@@ -578,18 +677,21 @@ roomInfirmary: Room 'The Infirmary'
     vocabWords = 'biofoam'
     name = 'biofoam'
     desc = "Fast-acting wound sealant. "
+    isPlural = true
 ;
 
 ++ infirmaryBandages: Thing
     vocabWords = 'bandages'
     name = 'bandages'
     desc = "Slow-acting wound sealant. "
+    isPlural = true
 ;
 
 ++ infirmaryPainkillers: Thing
     vocabWords = 'painkillers'
     name = 'painkillers'
     desc = "Mitigate the strain of sustaining injury. "
+    isPlural = true
 ;
 
 ++ infirmaryAdrenaline: Thing
@@ -614,12 +716,14 @@ roomInfirmary: Room 'The Infirmary'
     vocabWords = 'syringes'
     name = 'syringes'
     desc = "Can be used to administer drugs or extract liquids. "
+    isPlural = true
 ;
 
 ++ infirmaryTools: Thing
     vocabWords = 'surgical tools'
     name = 'tools'
     desc = "Various medical supplies, many of them sharp. "
+    isPlural = true
 ;
 
 /*-----------END INFIRMARY-----------*/
@@ -642,12 +746,14 @@ roomDormsPassengers: Room 'Passenger Dorms'
     vocabWords = 'food'
     name = 'food'
     desc = "Passenger rations. "
+    isPlural = true
 ;
 
 ++ dormPassengerClothes: Thing
     vocabWords = 'clothes/clothing'
     name = 'clothes'
     desc = "Passenger wardrobe. "
+    isPlural = true
 ;
 
 /*-----------END PASSANGER DORM-----------*/
