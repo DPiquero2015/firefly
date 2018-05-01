@@ -325,7 +325,6 @@ roomBridge: Room 'The Bridge'
 	name = 'ladder'
 	desc = "A ladder leading down to an airlock. It appears to be sealed shut. "
 ;
-;
 
 /*-----------END BRIDGE-----------*/
 
@@ -337,16 +336,17 @@ roomHallFront: Room 'The Front Hall'
 	north = roomBridge
 	south = roomKitchen
 	down = roomDormsCrew
-    canTravelerPass(traveler)
+    dobjFor(TravelVia)
     {
-        return inherited(traveler) && !stats.locked;
-    }
-    explainTravelBarrier(traveler)
-    {
-        if (stats.locked)
-            "The door is locked. ";
-        else
-            inherited(traveler);
+        verify()
+        {
+            if (stats.locked)
+                illogicalNow('The door is locked. ');
+        }
+        action()
+        {
+            inherited();
+        }
     }
 ;
 
@@ -587,17 +587,17 @@ roomCatwalk: Room 'The Catwalk'
 	"The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. "
 	north = roomDormsCrew
 	down = roomCargoBay
-    dobjFor(Enter)
+    dobjFor(TravelVia)
     {
         action()
         {
-            inherited();
-            
             if (stats.airlock)
                 finishGameMsg('Sucked out into space, the captain of the ship <<cargoBaySuit.isWornBy(me)
-                      ? 'Drifted in space until their space suit ran out of Oxygen. '
-                      : 'Quickly suffocated and died from the lack of pressure and Oxygen in the cold depths of nothing. '>>',
+                      ? 'drifted until their space suit ran out of oxygen. '
+                      : 'quickly fell unconscious from the lack of oxygen and died from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
+            
+            inherited();
         }
     }
 ;
