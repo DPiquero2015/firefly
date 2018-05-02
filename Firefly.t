@@ -43,7 +43,7 @@ stats: Thing
 
     // defaults
 	defTime = 1300
-    
+
     // ship
     shipTime = 20
     shipDelay = 15
@@ -65,13 +65,13 @@ sit(min)
     stats.time += min;
     stats.oxygen -= min;
     stats.temp -= min;
-    
+
     if (stats.oxygen <= 0)
         dieOxygen();
-    
+
     if (stats.temp <= -20)
         dieTemperature();
-    
+
     "You wait for <<min>> minute<<min > 1 ? 's' : ''>>. ";
 }
 
@@ -160,22 +160,22 @@ me: Actor
         stats.time++;
 		stats.oxygen--;
 		stats.temp--;
-        
+
         if (stats.doReaver && stats.time > stats.reaverTime)
             finishGameMsg('Reavers boarded the ship.
                 There was nothing that could be done.
                 You either die or will soon wish you did. ',
                           [finishOptionQuit, finishOptionRestart]);
-        
+
         if (stats.oxygen <= 0)
             dieOxygen();
-        
+
         if (stats.temp <= -20)
             dieTemperature();
 
 		inherited(dest, connector, backConnector);
 	}
-    
+
     lookAround(verbose)
     {
         if (!stats.lights)
@@ -315,7 +315,7 @@ roomBridge: Room 'The Bridge'
         else
             "<<rand(description)>> ";
     }
-    
+
     dobjFor(LookThrough) remapTo(Examine, bridgeWindows)
 ;
 
@@ -595,7 +595,7 @@ roomCatwalk: Room 'The Catwalk'
                       ? 'drift until your space suit runs out of oxygen. '
                       : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
-            
+
             inherited();
         }
     }
@@ -631,7 +631,7 @@ roomCargoBay: Room 'The Cargo Bay'
             {
                 local region = rand('head', 'chest', 'stomach', 'legs');
                 "The captain of the ship shoots you in the <<region>>. ";
-                
+
                 if (region == 'head' || region == 'chest')
                     finishGameMsg('After being shot in the <<region>>, you die. ',
                               [finishOptionQuit, finishOptionRestart]);
@@ -643,6 +643,10 @@ roomCargoBay: Room 'The Cargo Bay'
                     stats.catalyzer = true;
                     stats.boarding = nil;
                 }
+                else
+	                finishGameMsg('With nothing to defend yourself with, the captain shoots you again.
+                		This time, he doesn\'t miss. You die. ',
+                              [finishOptionQuit, finishOptionRestart]);
             }
             else
             {
