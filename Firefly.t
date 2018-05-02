@@ -8,8 +8,10 @@ gameMain: GameMainDef
 gameInit: InitObject
     execute()
     {
+        // Chance for reavers to spawn
         stats.doReaver = rand(10) == 0;
-        stats.reaverTime = stats.doReaver ? rand(60) : -1;
+        // Time for reavers to arrive
+        stats.reaverTime = stats.doReaver ? rand(30) : -1;
     }
 ;
 
@@ -43,19 +45,49 @@ stats: Thing
 	defTime = 1300
     
     // ship
-    shipTime = 0
+    shipTime = 20
     shipDelay = 15
     doShip = rigged &&
         time >= shipTime &&
         time < shipTime + shipDelay
     rigged = nil
     answered = nil
-    boardPeaceful = nil
+    boarding = nil
+    gunpoint = nil
 
     // reavers
     doReaver = nil
     reaverTime = -1
 ;
+
+sit(min)
+{
+    stats.time += min;
+    stats.oxygen -= min;
+    stats.temp -= min;
+    
+    if (stats.oxygen <= 0)
+        dieOxygen();
+    
+    if (stats.temp <= -20)
+        dieTemperature();
+    
+    "You wait for <<min>> minute<<min > 1 ? 's' : ''>>. ";
+}
+
+dieOxygen()
+{
+    finishGameMsg('The oxygen levels on the ship have depleted.
+            You suffocate and die. ',
+                      [finishOptionQuit, finishOptionRestart]);
+}
+
+dieTemperature()
+{
+    finishGameMsg('The ship\' temperature has dropped too low.
+            You freeze and die. ',
+                      [finishOptionQuit, finishOptionRestart]);
+}
 
 DefineSystemAction(Stats)
 	execSystemAction()
@@ -64,13 +96,12 @@ DefineSystemAction(Stats)
 		System Time:\t<<stats.defTime + stats.time>>
 		\nOxygen Levels:\t<<stats.oxygen>>%
 		\nTemperature:\t<<stats.temp>>F
-        \nAirlock:\t<<stats.airlock ? 'Y' : 'N'>>
 		";
 	}
 ;
 
 VerbRule(Stats)
-	('stats' | 'status')
+	'stats'
 	: StatsAction
 	verbPhrase = 'check/checking the system statistics'
 ;
@@ -107,6 +138,20 @@ VerbRule(Repair)
     verbPhrase = 'repair/repairing (what)'
 ;
 
+DefineLiteralAction(WaitFor)
+    execAction()
+    {
+        if (rexMatch('[0-9]+', getLiteral()))
+            sit(toInteger(getLiteral()));
+    }
+;
+
+VerbRule(WaitFor)
+    'wait' singleLiteral ( | 'minute' | 'minutes' )
+    : WaitForAction
+    verbPhrase = 'wait/waiting for (what) minutes'
+;
+
 me: Actor
 	location = roomBridge
 
@@ -119,21 +164,25 @@ me: Actor
         if (stats.doReaver && stats.time > stats.reaverTime)
             finishGameMsg('Reavers boarded the ship.
                 There was nothing that could be done.
-                Any crew onboard have either been killed or will soon wish they had been. ',
+                You either die or will soon wish you did. ',
                           [finishOptionQuit, finishOptionRestart]);
         
         if (stats.oxygen <= 0)
-            finishGameMsg('The oxygen levels on the ship have depleted.
-                Any life onboard has suffocated and died. ',
-                          [finishOptionQuit, finishOptionRestart]);
+            dieOxygen();
         
         if (stats.temp <= -20)
-            finishGameMsg('The ship\' temperature has dropped too low.
-                Any life onboard has frozen and died. ',
-                          [finishOptionQuit, finishOptionRestart]);
+            dieTemperature();
 
 		inherited(dest, connector, backConnector);
 	}
+    
+    lookAround(verbose)
+    {
+        if (!stats.lights)
+            "It's hard to tell where anything is without the lights on. ";
+        else
+            inherited(verbose);
+    }
 ;
 
 /*----------BEGIN BRIDGE----------*/
@@ -146,34 +195,34 @@ roomBridge: Room 'The Bridge'
 
 + bridgeConsoles: Fixture
     vocabWords = 'console*consoles'
-	name = 'Bridge Consoles'
+	name = 'bridge consoles'
 	desc = "The ship consoles.
         \bThe navigation controls, system controls, and comms are layed out. "
 ;
 
 ++ bridgeControlsNavigation: Fixture
-	vocabWords = 'navigation'
-	name = 'Navigation Controls'
+	vocabWords = 'navigation controls'
+	name = 'navigation controls'
 	desc = "The navigation controls.
         \bNothing seems to have power. A joystick can still be used though. "
 ;
 
 +++ bridgeTheStick: Fixture
 	vocabWords = 'stick/joystick'
-	name = 'Joystick'
+	name = 'joystick'
 	desc = "A joystick that looks like it controls some part of the ship. Moving it has no effect. "
 ;
 
 ++ bridgeControlsSystem: Fixture
-	vocabWords = 'system'
-	name = 'System Controls'
+	vocabWords = 'system controls'
+	name = 'system controls'
 	desc = "The system controls.
         \bThe power, door, and airlock controls are scattered around. "
 ;
 
 +++ bridgeControlsPower: Switch
-	vocabWords = 'power'
-	name = 'Power Controls'
+	vocabWords = 'power controls'
+	name = 'power controls'
 	desc = "Switches that seem like they can toggle the lights. "
     isOn = true
     makeOn(val)
@@ -185,86 +234,36 @@ roomBridge: Room 'The Bridge'
 
 +++ bridgeControlsDoors: Lockable, Fixture
 	vocabWords = 'door*doors'
-	name = 'Coor Controls'
+	name = 'door controls'
 	desc = "Buttons that look like they can lock and unlock the ship's doors. "
     initiallyLocked = nil
-    dobjFor(Lock)
+    makeLocked(val)
     {
-        verify()
-        {
-            if (isLocked)
-                illogicalAlready('The doors are already locked. ');
-        }
-        action()
-        {
-            makeLocked(true);
-            
-            stats.locked = true;
-            "The doors are now locked. ";
-        }
-    }
-    dobjFor(Unlock)
-    {
-        verify()
-        {
-            if (!isLocked)
-                illogicalAlready('The doors are already unlocked. ');
-        }
-        action()
-        {
-            makeLocked(nil);
-            
-            stats.locked = nil;
-            "The doors are now unlocked. ";
-        }
+        inherited(val);
+        stats.locked = val;
     }
 ;
 
 +++ bridgeControlsCargoBay: Openable, Fixture
 	vocabWords = 'airlock'
-	name = 'Airlock Controls'
+	name = 'airlock controls'
 	desc = "Buttons that seem like they can open and close the cargo bay airlock. "
     initiallyOpen = nil
-    dobjFor(Open)
+    makeOpen(val)
     {
-        verify()
-        {
-            if (isOpen)
-                illogicalAlready('The airlock is already open. ');
-        }
-        action()
-        {
-            inherited();
-            
-            stats.airlock = true;
-            "The airlock is now open. ";
-        }
-    }
-    dobjFor(Close)
-    {
-        verify()
-        {
-            if (!isOpen)
-                illogicalAlready('The airlock is already closed. ');
-        }
-        action()
-        {
-            inherited();
-            
-            stats.airlock = nil;
-            "The airlock is now closed. ";
-        }
+        inherited(val);
+        stats.airlock = val;
     }
 ;
 
 ++ bridgeControlsComms: Fixture
 	vocabWords = 'comm*comms'
-	name = 'Communication Controls'
+	name = 'communication controls'
     description = 'Can be rigged to emit a static that may cause passing ships to stop and investigate. '
 	desc
     {
         "The communication controls.
-        \b<<description>>";
+        \b<<stats.doShip ? 'The screen lights up with the face of a ship\'s captain. Their hail may be answered. ' : description>>";
     }
     dobjFor(Rig)
     {
@@ -276,9 +275,8 @@ roomBridge: Room 'The Bridge'
         action()
         {
             stats.rigged = true;
+            description = 'The comms screen is blank. ';
             "The comms have been rigged. ";
-            
-            description = 'The screen lights up with the face of a ship\'s captain. Their hail may be answered. ';
         }
     }
     dobjFor(Answer)
@@ -292,8 +290,9 @@ roomBridge: Room 'The Bridge'
         }
         action()
         {
-            "The ship arrives and a spare part is given by the captain. ";
-            stats.boardPeaceful = true;
+            stats.answered = true;
+            stats.boarding = true;
+            "The ship arrives and docks at the airlock. ";
         }
      }
 ;
@@ -494,7 +493,7 @@ roomEngine: Room 'The Engine Room'
             {
                 finishGameMsg('Plugging in the catalyer, the engine begins to turn.
                     Power is restored and air begins to circulate throughout the ship.
-                    The crew survived. ',
+                    You survive. ',
                               [finishOptionQuit, finishOptionRestart]);
             }
         }
@@ -531,12 +530,12 @@ roomEngine: Room 'The Engine Room'
         verify()
         {
             if (stats.manual)
-                illogicalAlready('The manual has already been read, there\'s not much more that can be got out of it. ');
+                illogicalAlready('The manual has already been read, there\'s not much more to get out of it. ');
         }
         action()
         {
             stats.manual = true;
-            "Reading the manual gives insight into the construction of the engine. ";
+            "Reading the manual gives you insight into the construction of the engine. ";
         }
     }
 ;
@@ -591,10 +590,10 @@ roomCatwalk: Room 'The Catwalk'
     {
         action()
         {
-            if (stats.airlock)
-                finishGameMsg('Sucked out into space, the captain of the ship <<cargoBaySuit.isWornBy(me)
-                      ? 'drifted until their space suit ran out of oxygen. '
-                      : 'quickly fell unconscious from the lack of oxygen and died from pressure reduction out in the cold depths of nothing. '>>',
+            if (stats.airlock && !stats.boarding)
+                finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
+                      ? 'drift until your space suit runs out of oxygen. '
+                      : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
             
             inherited();
@@ -604,30 +603,60 @@ roomCatwalk: Room 'The Catwalk'
 
 /*----------END CATWALK-----------*/
 
-/*----------BEGIN AIR LOCK-----------*/
-
-roomAirLock: Room 'The Air Lock'
-	"The air lock before the cargo bay. To the south is the cargo bay.
-    \bThere is a switch on the wall. "
-	south = roomCargoBay
-;
-
-+ airLockSwitch: Fixture
-    vocabWords = 'door switch'
-    name = 'switch'
-    desc = "The switch controlling the airlock door. "
-;
-
-/*-----------END AIR LOCK-----------*/
-
 /*----------BEGIN CARGO----------*/
 
 roomCargoBay: Room 'The Cargo Bay'
-	"The cargo bay. To the north is the air lock. To the south is the infirmary. Above is the catwalk.
-    \bTaking up most of the space are large cargo boxes, in the corner space suits can be seen. "
-	north = roomAirLock
+    "The cargo bay. To the north is the air lock. To the south is the infirmary. Above is the catwalk.
+    \bTaking up most of the space are large cargo boxes, on the wall is a switch, and in the corner space suits can be seen."
 	south = roomInfirmary
 	up = roomCatwalk
+    dobjFor(TravelVia)
+    {
+        action()
+        {
+            if (stats.airlock && !stats.boarding)
+                finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
+                      ? 'drift until your space suit runs out of oxygen. '
+                      : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
+                              [finishOptionQuit, finishOptionRestart]);
+
+            inherited();
+        }
+    }
+    roomAfterAction()
+    {
+        if (stats.boarding)
+        {
+            if (stats.gunpoint)
+            {
+                local region = rand('head', 'chest', 'stomach', 'legs');
+                "The captain of the ship shoots you in the <<region>>. ";
+                
+                if (region == 'head' || region == 'chest')
+                    finishGameMsg('After being shot in the <<region>>, you die. ',
+                              [finishOptionQuit, finishOptionRestart]);
+                if (cargoBayWeapons.isHeldBy(me) || dormCrewWeapons.isHeldBy(me))
+                {
+                    "With a gun hidden in your coat you catch the captain by surprise.
+                    Reluctantly he hands over the catalyzer and orders his crew to put down their guns and leave. ";
+                    cargoAirLockSwitch.makeOpen(nil);
+                    stats.catalyzer = true;
+                    stats.boarding = nil;
+                }
+            }
+            else
+            {
+                if (stats.airlock)
+                {
+                    "The captain of the ship and some members of his crew stand at the edge of the airlock,
+                    guns drawn and pointed at you. ";
+                    stats.gunpoint = true;
+                }
+                else
+                    "The captain of the ship can be seen outside the airlock. ";
+            }
+        }
+    }
 ;
 
 + cargoBayBoxes: Fixture
@@ -654,6 +683,19 @@ roomCargoBay: Room 'The Cargo Bay'
     vocabWords = 'space suit'
     name = 'space suit'
     desc = "Space suits for venturing out into the black. "
+    isListed = nil
+;
+
++ cargoAirLockSwitch: Openable, Fixture
+    vocabWords = 'airlock switch'
+    name = 'airlock switch'
+    desc = "The switch controlling the airlock door. "
+    initiallyOpen = nil
+    makeOpen(val)
+    {
+        inherited(val);
+        stats.airlock = val;
+    }
 ;
 
 /*-----------END CARGO-----------*/
