@@ -16,3 +16,8 @@
 ### Mac
 
 `frob Firefly`
+
+
+## To Run Online
+
+`http://gs.tads.io/?storyfile=`

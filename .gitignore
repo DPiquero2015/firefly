@@ -8,8 +8,8 @@
 !GameInfo.txt
 
 # release files
-!Firefly_Win.t3
-!Firefly_Web_Win.t3
+!Firefly.t3
+!Firefly_Web.t3
 
 # folders
 !docs/
