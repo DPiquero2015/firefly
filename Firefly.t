@@ -280,7 +280,8 @@ roomBridge: Room 'The Bridge'
     desc
     {
         "The communication controls.
-        \b<<stats.doShip ? 'The screen lights up with the face of a ship\'s captain. Their hail may be answered. ' : description>>";
+        \b<<stats.doShip ? 'The screen lights up with the face of a ship\'s captain. 
+        Their hail may be answered. ' : description>>";
     }
     dobjFor(Rig)
     {
@@ -347,7 +348,8 @@ roomBridge: Room 'The Bridge'
 /*----------BEGIN FRONT HALL----------*/
 
 roomHallFront: Room 'The Front Hall'
-    "The front hall. To the north is the bridge. To the south is the kitchen. Below are the crew's dorms.
+    "The front hall. To the north is the bridge. To the south is the kitchen. 
+    Below are the crew's dorms.
      \bTo the side is a ladder that goes past the roof. "
     north = roomBridge
     south = roomKitchen
@@ -391,7 +393,8 @@ roomHallFront: Room 'The Front Hall'
 
 roomKitchen: Room 'The Kitchen'
     "The kitchen. To the north is the front hall. To the south is the back hall.
-     \bCabinets and cupboards dot the walls while a large wooden table rests in the center. "
+     \bCabinets and cupboards dot the walls while a large wooden 
+     table rests in the center. "
     north = roomHallFront
     south = roomHallBack
 ;
@@ -471,7 +474,8 @@ roomEngine: Room 'The Engine Room'
 + engineEngine: Fixture
     vocabWords = 'engine'
     name = 'engine'
-    description = 'It is currently broken down, and whatever problems it has need to be diagnosed. '
+    description = 'It is currently broken down, and whatever problems it has 
+                   need to be diagnosed. '
     desc
     {
         "The ship's engine.
@@ -491,7 +495,8 @@ roomEngine: Room 'The Engine Room'
             {
                 stats.knowledge = true;
                 description = 'It is currently broken down, but can be fixed with a new catalyzer. ';
-                "It appears that the catalyzer on the port compression coil blew. That's where the trouble started. ";
+                "It appears that the catalyzer on the port compression coil blew. 
+                 That's where the trouble started. ";
             }
             else
                 "The engine is broken, and it is not obvious why. ";
@@ -547,7 +552,8 @@ roomEngine: Room 'The Engine Room'
         verify()
         {
             if (stats.manual)
-                illogicalAlready('The manual has already been read, there\'s not much more to get out of it. ');
+                illogicalAlready('The manual has already been read, there\'s 
+                                  not much more to get out of it. ');
         }
         action()
         {
@@ -610,7 +616,8 @@ roomCatwalk: Room 'The Catwalk'
             if (stats.airlock && !stats.boarding)
                 finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
                       ? 'drift until your space suit runs out of oxygen. '
-                      : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
+                      : 'quickly fall unconscious from the lack of oxygen and die 
+                         from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
 
             inherited();
@@ -623,8 +630,10 @@ roomCatwalk: Room 'The Catwalk'
 /*----------BEGIN CARGO----------*/
 
 roomCargoBay: Room 'The Cargo Bay'
-    "The cargo bay. The airlock door towers above you. To the south is the infirmary. Above is the catwalk.
-    \bTaking up most of the space are large cargo boxes, on the wall is a switch, and in the corner space suits can be seen."
+    "The cargo bay. The airlock door towers above you. To the south is the infirmary. 
+    Above is the catwalk.
+    \bTaking up most of the space are large cargo boxes, on the wall is a switch, 
+    and in the corner space suits can be seen."
     south = roomInfirmary
     up = roomCatwalk
     dobjFor(TravelVia)
@@ -634,7 +643,8 @@ roomCargoBay: Room 'The Cargo Bay'
             if (stats.airlock && !stats.boarding)
                 finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
                       ? 'drift until your space suit runs out of oxygen. '
-                      : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
+                      : 'quickly fall unconscious from the lack of oxygen and die 
+                         from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
 
             inherited();
@@ -655,21 +665,23 @@ roomCargoBay: Room 'The Cargo Bay'
                 if (cargoBayWeapons.isHeldBy(me) || dormCrewWeapons.isHeldBy(me))
                 {
                     "With a gun hidden in your coat you catch the captain by surprise.
-                    Reluctantly he hands over the catalyzer and orders his crew to put down their guns and leave. ";
+                    Reluctantly he hands over the catalyzer and orders his crew to put 
+                    down their guns and leave. ";
                     cargoAirLockSwitch.makeOpen(nil);
                     stats.catalyzer = true;
                     stats.boarding = nil;
                 }
                 else
-                    finishGameMsg('With nothing to defend yourself with, the captain shoots you again. This time, he doesn\'t miss. You die. ',
+                    finishGameMsg('With nothing to defend yourself with, the captain shoots 
+                                   you again. This time, he doesn\'t miss. You die. ',
                                   [finishOptionQuit, finishOptionRestart]);
             }
             else
             {
                 if (stats.airlock)
                 {
-                    "The captain of the ship and some members of his crew stand at the edge of the airlock,
-                    guns drawn and pointed at you. ";
+                    "The captain of the ship and some members of his crew stand at the 
+                     edge of the airlock, guns drawn and pointed at you. ";
                     stats.gunpoint = true;
                 }
                 else
@@ -715,7 +727,8 @@ roomCargoBay: Room 'The Cargo Bay'
     {
         finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
                       ? 'drift until your space suit runs out of oxygen. '
-                      : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
+                      : 'quickly fall unconscious from the lack of oxygen and die 
+                         from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
         //inherited(val);
         //stats.airlock = val;
