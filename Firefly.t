@@ -5,6 +5,16 @@
 
 gameMain: GameMainDef
     initialPlayerChar = me
+
+    showIntro()
+    {
+        "You are the captain of a Firefly class ship fitted for hauling cargo. You are
+         passing through a rather desolate region of the 'verse when the lights suddenly
+         flicker and warning lights begin flashing on your console. The engine has given
+         out. Not only is the ship helplessly stranded in space, but the life support
+         systems are now inoperable. You must act quickly before you run out of both oxygen
+         and heat... ";
+    }
 ;
 
 gameInit: InitObject
@@ -222,14 +232,15 @@ roomBridge: Room 'The Bridge'
     vocabWords = 'system controls'
     name = 'system controls'
     desc = "The system controls.
-            \bThe power, door, and airlock controls are scattered around. "
+            \bThe door and airlock controls are scattered around next to the light switch. "
 ;
 
 +++ bridgeControlsPower: Switch
-    vocabWords = 'power controls'
-    name = 'power controls'
-    desc = "Switches that seem like they can toggle the lights. "
+    vocabWords = 'light switch/lights'
+    name = 'lights'
+    desc = "The master switch for the ship\'s interior lighting. "
     isOn = true
+    isPlural = true
     makeOn(val)
     {
         inherited(val);
