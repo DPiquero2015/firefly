@@ -534,7 +534,7 @@ roomEngine: Room 'The Engine Room'
 
 ++ engineBinTools: Thing
     vocabWords = 'tools'
-    name = 'tools'
+    name = 'engine tools'
     desc = "Mechanic's tools. "
     isPlural = true
 ;
