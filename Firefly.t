@@ -13,7 +13,8 @@ gameMain: GameMainDef
          flicker and warning lights begin flashing on your console. The engine has given
          out. Not only is the ship helplessly stranded in space, but the life support
          systems are now inoperable. You must act quickly before you run out of both oxygen
-         and heat... ";
+         and heat... 
+         \bTo get info about the ship, type \'stats\'.\b ";
     }
 ;
 
@@ -173,8 +174,8 @@ me: Actor
     travelTo(dest, connector, backConnector)
     {
         stats.time++;
-            stats.oxygen--;
-            stats.temp--;
+        stats.oxygen--;
+        stats.temp--;
 
         if (stats.doReaver && stats.time > stats.reaverTime)
             finishGameMsg('Reavers boarded the ship.
@@ -622,7 +623,7 @@ roomCatwalk: Room 'The Catwalk'
 /*----------BEGIN CARGO----------*/
 
 roomCargoBay: Room 'The Cargo Bay'
-    "The cargo bay. To the north is the air lock. To the south is the infirmary. Above is the catwalk.
+    "The cargo bay. The airlock door towers above you. To the south is the infirmary. Above is the catwalk.
     \bTaking up most of the space are large cargo boxes, on the wall is a switch, and in the corner space suits can be seen."
     south = roomInfirmary
     up = roomCatwalk
@@ -708,12 +709,16 @@ roomCargoBay: Room 'The Cargo Bay'
 + cargoAirLockSwitch: Openable, Fixture
     vocabWords = 'airlock switch'
     name = 'airlock switch'
-    desc = "The switch controlling the airlock door. "
+    desc = "The switch for opening and closing the airlock door. "
     initiallyOpen = nil
     makeOpen(val)
     {
-        inherited(val);
-        stats.airlock = val;
+        finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
+                      ? 'drift until your space suit runs out of oxygen. '
+                      : 'quickly fall unconscious from the lack of oxygen and die from pressure reduction out in the cold depths of nothing. '>>',
+                              [finishOptionQuit, finishOptionRestart]);
+        //inherited(val);
+        //stats.airlock = val;
     }
 ;
 
