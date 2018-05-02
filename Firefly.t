@@ -14,7 +14,8 @@ gameMain: GameMainDef
          out. Not only is the ship helplessly stranded in space, but the life support
          systems are now inoperable. You must act quickly before you run out of both oxygen
          and heat... 
-         \bTo get info about the ship, type \'stats\'.\b ";
+         \bTo get info about the ship, type \'stats\'. Objects and rooms may be more closely examined 
+         with \'look\', and some objects can be taken with \'take\'\b ";
     }
 ;
 
@@ -393,10 +394,12 @@ roomHallFront: Room 'The Front Hall'
 
 roomKitchen: Room 'The Kitchen'
     "The kitchen. To the north is the front hall. To the south is the back hall.
+     There is a stairwell leading down to the catwalk.
      \bCabinets and cupboards dot the walls while a large wooden 
      table rests in the center. "
     north = roomHallFront
     south = roomHallBack
+    down = roomCatwalk
 ;
 
 + kitchenCabinets: Fixture
@@ -606,9 +609,11 @@ roomDormsCrew: Room 'Crew Dorms'
 /*----------BEGIN CATWALK----------*/
 
 roomCatwalk: Room 'The Catwalk'
-    "The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. "
+    "The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. 
+     Above is the kitchen. "
     north = roomDormsCrew
     down = roomCargoBay
+    up = roomKitchen
     dobjFor(TravelVia)
     {
         action()
@@ -706,14 +711,14 @@ roomCargoBay: Room 'The Cargo Bay'
 
 ++ cargoBayParts: Thing
     vocabWords = 'parts'
-    name = 'parts'
+    name = 'miscellaneous parts'
     desc = "Various parts stored inside the cargo boxes. "
     isPlural = true
 ;
 
 + cargoBaySuit: Wearable
-    vocabWords = 'space suit'
-    name = 'space suit'
+    vocabWords = 'space suit/suits'
+    name = 'space suit/suits'
     desc = "Space suits for venturing out into the black. "
     isListed = nil
 ;
@@ -747,7 +752,7 @@ roomInfirmary: Room 'The Infirmary'
 ;
 
 + infirmaryCabinets: Fixture
-    vocabWords = 'cabinents'
+    vocabWords = 'cabinets'
     name = 'cabinets'
     desc = "Cabinets containing various medical supplies. "
 ;
@@ -800,7 +805,7 @@ roomInfirmary: Room 'The Infirmary'
 
 ++ infirmaryTools: Thing
     vocabWords = 'surgical tools'
-    name = 'tools'
+    name = 'surgical tools'
     desc = "Various medical supplies, many of them sharp. "
     isPlural = true
 ;
@@ -830,7 +835,7 @@ roomDormsPassengers: Room 'Passenger Dorms'
 
 ++ dormPassengerClothes: Thing
     vocabWords = 'clothes/clothing'
-    name = 'clothes'
+    name = 'clothing'
     desc = "Passenger wardrobe. "
     isPlural = true
 ;
