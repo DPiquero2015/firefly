@@ -4,7 +4,7 @@
 
 ## To Compile
 
-`t3make -d -f Firefly.t3m`
+`t3make -a -f Firefly.t3m`
 
 
 ## To Run
