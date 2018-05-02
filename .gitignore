@@ -4,7 +4,12 @@
 # project files
 !Firefly.t
 !Firefly.t3m
+!Firefly_Web.t3m
 !GameInfo.txt
+
+# release files
+!Firefly_Win.t3
+!Firefly_Web_Win.t3
 
 # folders
 !docs/

@@ -114,7 +114,7 @@ Back Hall
   - ladder up, auxiliary access
     * airlock
     * gravity
-  
+
 Engine Room
 * look
   - engine
