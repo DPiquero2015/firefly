@@ -730,13 +730,18 @@ roomCargoBay: Room 'The Cargo Bay'
     initiallyOpen = nil
     makeOpen(val)
     {
-        finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
-                      ? 'drift until your space suit runs out of oxygen. '
-                      : 'quickly fall unconscious from the lack of oxygen and die 
-                         from pressure reduction out in the cold depths of nothing. '>>',
+        if (!stats.boarding)
+        
+            finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
+                           ? 'drift until your space suit runs out of oxygen. '
+                           : 'quickly fall unconscious from the lack of oxygen and die 
+                              from pressure reduction out in the cold depths of nothing. '>>',
                               [finishOptionQuit, finishOptionRestart]);
-        //inherited(val);
-        //stats.airlock = val;
+        else
+        {
+            inherited(val);
+            stats.airlock = val;
+        }
     }
 ;
 
