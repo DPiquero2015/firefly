@@ -13,8 +13,8 @@ gameMain: GameMainDef
          flicker and warning lights begin flashing on your console. The engine has given
          out. Not only is the ship helplessly stranded in space, but the life support
          systems are now inoperable. You must act quickly before you run out of both oxygen
-         and heat... 
-         \bTo get info about the ship, type \'stats\'. Objects and rooms may be more closely examined 
+         and heat...
+         \bTo get info about the ship, type \'stats\'. Objects and rooms may be more closely examined
          with \'look\', and some objects can be taken with \'take\'\b ";
     }
 ;
@@ -96,7 +96,7 @@ sit(min)
 
 die(msg)
 {
-    finishGameMsg(msg, [finishOptionQuit, finishOptionRestart, finishOptionUndo]);
+    finishGameMsg(msg, [finishOptionQuit, finishOptionRestart]);
 }
 
 dieOxygen()
@@ -113,7 +113,7 @@ dieSpace()
 {
     die('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
           ? 'drift until your space suit runs out of oxygen. '
-          : 'quickly fall unconscious from the lack of oxygen and die 
+          : 'quickly fall unconscious from the lack of oxygen and die
              from pressure reduction out in the cold depths of nothing. '>>');
 }
 
@@ -325,7 +325,7 @@ roomBridge: Room 'The Bridge'
     {
         inherited(val);
         stats.airlock = val;
-        
+
         if (stats.airlock && stats.boarding)
             stats.oxygen = 100;
     }
@@ -338,7 +338,7 @@ roomBridge: Room 'The Bridge'
     desc
     {
         "The communication controls.
-        \b<<stats.doShip ? 'The screen lights up with the face of a ship\'s captain. 
+        \b<<stats.doShip ? 'The screen lights up with the face of a ship\'s captain.
         Their hail may be answered. ' : description>>";
     }
     dobjFor(Rig)
@@ -406,7 +406,7 @@ roomBridge: Room 'The Bridge'
 /*----------BEGIN FRONT HALL----------*/
 
 roomHallFront: Room 'The Front Hall'
-    "The front hall. To the north is the bridge. To the south is the kitchen. 
+    "The front hall. To the north is the bridge. To the south is the kitchen.
     Below are the crew's dorms.
      \bTo the side is a ladder that goes past the roof. "
     north = roomBridge
@@ -452,7 +452,7 @@ roomHallFront: Room 'The Front Hall'
 roomKitchen: Room 'The Kitchen'
     "The kitchen. To the north is the front hall. To the south is the back hall.
      There is a stairwell leading down to the catwalk.
-     \bCabinets and cupboards dot the walls while a large wooden 
+     \bCabinets and cupboards dot the walls while a large wooden
      table rests in the center. "
     north = roomHallFront
     south = roomHallBack
@@ -534,7 +534,7 @@ roomEngine: Room 'The Engine Room'
 + engineEngine: Fixture
     vocabWords = 'engine'
     name = 'engine'
-    description = 'It is currently broken down, and whatever problems it has 
+    description = 'It is currently broken down, and whatever problems it has
                    need to be diagnosed. '
     desc
     {
@@ -555,7 +555,7 @@ roomEngine: Room 'The Engine Room'
             {
                 stats.knowledge = true;
                 description = 'It is currently broken down, but can be fixed with a new catalyzer. ';
-                "It appears that the catalyzer on the port compression coil blew. 
+                "It appears that the catalyzer on the port compression coil blew.
                  That's where the trouble started. ";
             }
             else
@@ -612,7 +612,7 @@ roomEngine: Room 'The Engine Room'
         verify()
         {
             if (stats.manual)
-                illogicalAlready('The manual has already been read, there\'s 
+                illogicalAlready('The manual has already been read, there\'s
                                   not much more to get out of it. ');
         }
         action()
@@ -666,7 +666,7 @@ roomDormsCrew: Room 'Crew Dorms'
 /*----------BEGIN CATWALK----------*/
 
 roomCatwalk: Room 'The Catwalk'
-    "The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. 
+    "The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay.
      Above is the kitchen. "
     north = roomDormsCrew
     down = roomCargoBay
@@ -688,9 +688,9 @@ roomCatwalk: Room 'The Catwalk'
 /*----------BEGIN CARGO----------*/
 
 roomCargoBay: Room 'The Cargo Bay'
-    "The cargo bay. The airlock door towers above you. To the south is the infirmary. 
+    "The cargo bay. The airlock door towers above you. To the south is the infirmary.
     Above is the catwalk.
-    \bTaking up most of the space are large cargo boxes, on the wall is a switch, 
+    \bTaking up most of the space are large cargo boxes, on the wall is a switch,
     and in the corner space suits can be seen."
     south = roomInfirmary
     up = roomCatwalk
@@ -701,7 +701,7 @@ roomCargoBay: Room 'The Cargo Bay'
             if (stats.airlock && !stats.boarding)
                 die('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
                       ? 'drift until your space suit runs out of oxygen. '
-                      : 'quickly fall unconscious from the lack of oxygen and die 
+                      : 'quickly fall unconscious from the lack of oxygen and die
                          from pressure reduction out in the cold depths of nothing. '>>');
 
             inherited();
@@ -721,21 +721,21 @@ roomCargoBay: Room 'The Cargo Bay'
                 if (cargoBayWeapons.isHeldBy(me) || dormCrewWeapons.isHeldBy(me))
                 {
                     "With a gun hidden in your coat you catch the captain by surprise.
-                    Reluctantly he hands over the catalyzer and orders his crew to put 
+                    Reluctantly he hands over the catalyzer and orders his crew to put
                     down their guns and leave. ";
                     cargoAirLockSwitch.makeOpen(nil);
                     stats.catalyzer = true;
                     stats.boarding = nil;
                 }
                 else
-                    die('With nothing to defend yourself with, the captain shoots 
+                    die('With nothing to defend yourself with, the captain shoots
                                    you again. This time, he doesn\'t miss. You die. ');
             }
             else
             {
                 if (stats.airlock)
                 {
-                    "The captain of the ship and some members of his crew stand at the 
+                    "The captain of the ship and some members of his crew stand at the
                      edge of the airlock, guns drawn and pointed at you. ";
                     stats.gunpoint = true;
                 }
