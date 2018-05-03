@@ -142,9 +142,9 @@ DefineSystemAction(Help)
     execSystemAction()
     {
         if (!stats.rigged)
-            "Sending a distress signal could increase your chance of survival. "
+            "Sending a distress signal could increase your chance of survival. ";
         else if (stats.doShip && !stats.answered)
-            "Maybe your distress signal has been answered. "
+            "Maybe your distress signal has been answered. ";
     }
 ;
 
