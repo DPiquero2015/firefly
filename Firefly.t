@@ -79,8 +79,11 @@ stats: Thing
 sit(min)
 {
     stats.time += min;
-    stats.oxygen -= min;
-    stats.temp -= min;
+    if (!stats.airlock || !stats.boarding)
+    {
+        stats.oxygen -= min;
+        stats.temp -= min;
+    }
 
     if (stats.oxygen <= 0)
        dieOxygen();
@@ -88,21 +91,30 @@ sit(min)
     if (stats.temp <= -20)
        dieTemperature();
 
-    "You wait for <<min>> minute<<min > 1 ? 's' : ''>>. ";
+    "You wait for <<min>> minute<<min != 1 ? 's' : ''>>. ";
+}
+
+die(msg)
+{
+    finishGameMsg(msg, [finishOptionQuit, finishOptionRestart, finishOptionUndo]);
 }
 
 dieOxygen()
 {
-    finishGameMsg('The oxygen levels on the ship have depleted.
-                   You suffocate and die. ',
-                   [finishOptionQuit, finishOptionRestart]);
+    die('The oxygen levels on the ship have depleted. You suffocate and die. ');
 }
 
 dieTemperature()
 {
-    finishGameMsg('The ship\' temperature has dropped too low.
-                   You freeze and die. ',
-                   [finishOptionQuit, finishOptionRestart]);
+    die('The ship\' temperature has dropped too low. You freeze and die. ');
+}
+
+dieSpace()
+{
+    die('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
+          ? 'drift until your space suit runs out of oxygen. '
+          : 'quickly fall unconscious from the lack of oxygen and die 
+             from pressure reduction out in the cold depths of nothing. '>>');
 }
 
 DefineSystemAction(Stats)
@@ -158,7 +170,26 @@ DefineLiteralAction(WaitFor)
     execAction()
     {
         if (rexMatch('[0-9]+', getLiteral()))
-            sit(toInteger(getLiteral()));
+        {
+            local min = toInteger(getLiteral());
+            if (me.location == roomBridge)
+            {
+                if (stats.shipTime > stats.time)
+                {
+                    sit(stats.shipTime - stats.time);
+                    "The comms screen lights up with an image of a face. ";
+                }
+                else if (stats.shipTime <= stats.time && stats.shipTime + stats.shipDelay >= stats.time)
+                {
+                    sit(0);
+                    "The comms screen is alive with an image of a face. ";
+                }
+                else
+                    sit(min);
+            }
+            else
+                sit(min);
+        }
     }
 ;
 VerbRule(WaitFor)
@@ -175,8 +206,11 @@ me: Actor
     travelTo(dest, connector, backConnector)
     {
         stats.time++;
-        stats.oxygen--;
-        stats.temp--;
+        if (!stats.airlock || !stats.boarding)
+        {
+            stats.oxygen--;
+            stats.temp--;
+        }
 
         if (stats.doReaver && stats.time > stats.reaverTime)
             finishGameMsg('Reavers boarded the ship.
@@ -271,6 +305,9 @@ roomBridge: Room 'The Bridge'
     {
         inherited(val);
         stats.airlock = val;
+        
+        if (stats.airlock && stats.boarding)
+            stats.oxygen = 100;
     }
 ;
 
@@ -619,11 +656,7 @@ roomCatwalk: Room 'The Catwalk'
         action()
         {
             if (stats.airlock && !stats.boarding)
-                finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
-                      ? 'drift until your space suit runs out of oxygen. '
-                      : 'quickly fall unconscious from the lack of oxygen and die 
-                         from pressure reduction out in the cold depths of nothing. '>>',
-                              [finishOptionQuit, finishOptionRestart]);
+                dieSpace();
 
             inherited();
         }
@@ -646,11 +679,10 @@ roomCargoBay: Room 'The Cargo Bay'
         action()
         {
             if (stats.airlock && !stats.boarding)
-                finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
+                die('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
                       ? 'drift until your space suit runs out of oxygen. '
                       : 'quickly fall unconscious from the lack of oxygen and die 
-                         from pressure reduction out in the cold depths of nothing. '>>',
-                              [finishOptionQuit, finishOptionRestart]);
+                         from pressure reduction out in the cold depths of nothing. '>>');
 
             inherited();
         }
@@ -665,8 +697,7 @@ roomCargoBay: Room 'The Cargo Bay'
                 "The captain of the ship shoots you in the <<region>>. ";
 
                 if (region == 'head' || region == 'chest')
-                    finishGameMsg('After being shot in the <<region>>, you die. ',
-                              [finishOptionQuit, finishOptionRestart]);
+                    die('After being shot in the <<region>>, you die. ');
                 if (cargoBayWeapons.isHeldBy(me) || dormCrewWeapons.isHeldBy(me))
                 {
                     "With a gun hidden in your coat you catch the captain by surprise.
@@ -677,9 +708,8 @@ roomCargoBay: Room 'The Cargo Bay'
                     stats.boarding = nil;
                 }
                 else
-                    finishGameMsg('With nothing to defend yourself with, the captain shoots 
-                                   you again. This time, he doesn\'t miss. You die. ',
-                                  [finishOptionQuit, finishOptionRestart]);
+                    die('With nothing to defend yourself with, the captain shoots 
+                                   you again. This time, he doesn\'t miss. You die. ');
             }
             else
             {
@@ -731,16 +761,13 @@ roomCargoBay: Room 'The Cargo Bay'
     makeOpen(val)
     {
         if (!stats.boarding)
-        
-            finishGameMsg('Sucked out into space, you <<cargoBaySuit.isWornBy(me)
-                           ? 'drift until your space suit runs out of oxygen. '
-                           : 'quickly fall unconscious from the lack of oxygen and die 
-                              from pressure reduction out in the cold depths of nothing. '>>',
-                              [finishOptionQuit, finishOptionRestart]);
+            dieSpace();
         else
         {
             inherited(val);
             stats.airlock = val;
+            if (stats.airlock)
+                stats.oxygen = 100;
         }
     }
 ;
