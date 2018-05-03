@@ -17,4 +17,5 @@
 
 # include git files
 !.gitignore
+!index.html
 !README.md
