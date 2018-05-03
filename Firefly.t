@@ -124,6 +124,26 @@ VerbRule(Stats)
 
 /*-----------END STATS-----------*/
 
+/*----------BEGIN HELP----------*/
+
+DefineSystemAction(Help)
+    execSystemAction()
+    {
+        if (!stats.rigged)
+            "Sending a distress signal could increase your chance of survival. "
+        else if (stats.doShip && !stats.answered)
+            "Maybe your distress signal has been answered. "
+    }
+;
+
+VerbRule(Help)
+    'help'
+    : HelpAction
+    verbPhrase = 'help/helping'
+;
+
+/*-----------END HELP-----------*/
+
 /*----------BEGIN VERB DEFINITIONS----------*/
 
 DefineTAction(Rig);
