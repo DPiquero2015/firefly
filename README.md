@@ -20,4 +20,4 @@
 
 ## To Run Online
 
-`http://gs.tads.io/?storyfile=`
+`https://dpiquero2015.github.io/firefly`
