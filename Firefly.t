@@ -237,7 +237,7 @@ roomBridge: Room 'The Bridge'
             \bThe door and airlock controls are scattered around next to the light switch. "
 ;
 
-+++ bridgeControlsPower: Switch
++++ bridgeControlsPower: Switch, Fixture
     vocabWords = 'light switch/lights'
     name = 'lights'
     desc = "The master switch for the ship\'s interior lighting. "
@@ -724,9 +724,9 @@ roomCargoBay: Room 'The Cargo Bay'
 ;
 
 + cargoAirLockSwitch: Openable, Fixture
-    vocabWords = 'airlock switch'
-    name = 'airlock switch'
-    desc = "The switch for opening and closing the airlock door. "
+    vocabWords = 'airlock controls'
+    name = 'airlock controls'
+    desc = "The controls for opening and closing the airlock door. "
     initiallyOpen = nil
     makeOpen(val)
     {
