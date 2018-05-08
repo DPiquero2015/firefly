@@ -21,3 +21,7 @@
 ## To Run Online
 
 <https://dpiquero2015.github.io/firefly>
+
+## If Help is Needed
+
+See the Walkthrough in docs/
