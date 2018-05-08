@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1525782452 "altWriteup.tex" "altWriteup.pdf" "altWriteup" 1525782453
-  "./altWriteup.out" 1525782453 741 8ad20554e082d516a4fd079c014c7bb8 ""
+["pdflatex"] 1525789836 "altWriteup.tex" "altWriteup.pdf" "altWriteup" 1525789836
+  "./altWriteup.out" 1525789836 741 8ad20554e082d516a4fd079c014c7bb8 ""
   "/usr/local/texlive/2015/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2015/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/local/texlive/2015/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -41,9 +41,9 @@
   "/usr/local/texlive/2015/texmf-var/web2c/pdftex/pdflatex.fmt" 1432479681 3849859 39a7d258195bde2394e244961601fbc5 ""
   "/usr/local/texlive/2015/texmf.cnf" 1432479636 577 0d611272082f3cdb8e80e09a3c69cf07 ""
   "/usr/local/texlive/texmf-local/tex/latex/preambles/defaultPream.tex" 1509303087 105 7913245d137beac5c7a163b7e71f413a ""
-  "Walkthrough.txt" 1525782385 3563 c4faa23d5701b630293eae12238fb5e2 ""
-  "altWriteup.aux" 1525782453 1851 477a3c7a1d6957ac7db9a2b6f3f5186c ""
-  "altWriteup.out" 1525782453 741 8ad20554e082d516a4fd079c014c7bb8 ""
+  "Walkthrough.txt" 1525789827 3546 becdbd96591011787a392d21e9dd00b3 ""
+  "altWriteup.aux" 1525789836 1851 477a3c7a1d6957ac7db9a2b6f3f5186c ""
+  "altWriteup.out" 1525789836 741 8ad20554e082d516a4fd079c014c7bb8 ""
   "altWriteup.tex" 1525782452 9065 38a708f66716ec92ff4207f3307d5847 ""
   (generated)
   "altWriteup.pdf"
