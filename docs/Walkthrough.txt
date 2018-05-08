@@ -1,0 +1,138 @@
+You are the captain of a Firefly class ship fitted for hauling cargo. You are passing through a rather desolate region of the 'verse when the lights suddenly flicker and warning lights begin flashing on your console. The engine has given out. Not only is the ship helplessly stranded in space, but the life support systems are now inoperable. You must act quickly before you run out of both oxygen and heat...
+
+
+To get info about the ship, type 'stats'. Objects and rooms may be more closely examined with 'look', and some objects can be taken with 'take'
+
+
+The Bridge
+
+The bridge of the ship. To the south is the front hall.
+
+
+Inside there are consoles, windows looking out, and, to the side, a ladder.
+
+
+>look at consoles
+The ship consoles.
+
+
+The navigation controls, system controls, and comms are layed out.
+
+
+>look at comms
+The communication controls.
+
+
+Can be rigged to emit a static that may cause passing ships to stop and investigate.
+
+
+>rig the comms
+The comms have been rigged.
+
+
+>wait 20 minutes
+You wait for 20 minutes. The comms screen lights up with an image of a face.
+
+
+>answer the comms
+The ship arrives and docks at the airlock.
+
+
+>go south
+The Front Hall
+
+The front hall. To the north is the bridge. To the south is the kitchen. Below are the crew's dorms.
+
+
+To the side is a ladder that goes past the roof.
+
+
+>go down
+Crew Dorms
+
+The crew's dorms. To the south is the catwalk. Above is the front hall.
+
+
+At the front is a ladder.
+
+
+You see some weapons, some clothing, and some food here.
+
+
+>take the weapons
+Taken.
+
+
+>go south
+The Catwalk
+
+The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. Above is the kitchen.
+
+
+>go down
+The Cargo Bay
+
+The cargo bay. The airlock door towers above you. To the south is the infirmary. Above is the catwalk.
+
+
+Taking up most of the space are large cargo boxes, on the wall is a switch, and in the corner space suits can be seen.
+
+
+The captain of the ship can be seen outside the airlock.
+
+
+>open the airlock
+The captain of the ship and some members of his crew stand at the edge of the airlock, guns drawn and pointed at you.
+
+
+>look
+The Cargo Bay
+
+The cargo bay. The airlock door towers above you. To the south is the infirmary. Above is the catwalk.
+
+
+Taking up most of the space are large cargo boxes, on the wall is a switch, and in the corner space suits can be seen.
+
+
+The captain of the ship shoots you in the legs. With a gun hidden in your coat you catch the captain by surprise. Reluctantly he hands over the catalyzer and orders his crew to put down their guns and leave.
+
+
+>go up
+The Catwalk
+
+The catwalk above the cargo bay. To the north are the crew's dorms. Beneath is the cargo bay. Above is the kitchen.
+
+
+>go up
+The Kitchen
+
+The kitchen. To the north is the front hall. To the south is the back hall. There is a stairwell leading down to the catwalk.
+
+
+Cabinets and cupboards dot the walls while a large wooden table rests in the center.
+
+
+>go south
+The Back Hall
+
+The back hall. To the north is the kitchen. To the south is the engine room.
+
+
+To the side is a ladder.
+
+
+>go south
+The Engine Room
+
+The engine room. To the north is the back hall.
+
+
+In the middle sits the engine, and scattered around are various equipment bins.
+
+
+>look at the engine
+It appears that the catalyzer on the port compression coil blew. That's where the trouble started.
+
+
+>repair the engine
+*** Plugging in the catalyer, the engine begins to turn. Power is restored and air begins to circulate throughout the ship. You survive.  ***

@@ -13,6 +13,7 @@
 
 # folders
 !docs/
+!plans/
 !obj/.gitkeep
 
 # include git files
