@@ -1,0 +1,261 @@
+\documentclass[12pt]{article}
+
+\input{defaultPream}
+
+% double space
+\usepackage{setspace}
+\doublespace
+
+\usepackage{verbatim}
+
+\begin{document}
+
+\section{Summary}
+
+\qq The following is a comprehensive account of the contents and possible events
+of each room. Features that were planned, but were ultimately unimplemented, are
+marked with a '$\ast$'.
+
+%----------BEGIN BRIDGE----------
+
+\subsection{Bridge}
+
+\qq The starting location of the player.
+
+\begin{enumerate}
+  \item \textbf{Consoles}: May be looked at to reveal the following:
+  \begin{enumerate}
+    \item \textbf{Navigation Controls}: May be looked at.
+    \begin{enumerate}
+      \item \textbf{Joystick}: May be looked at. Nothing happens.
+    \end{enumerate}
+    \item \textbf{System Controls}: May be looked at.
+    \begin{enumerate}
+      \item \textbf{Light Controls}: Controls the ship's lights. Turning them
+        off prevents the player from looking at anything.
+      \item \textbf{Door Controls}: Controls that lock and unlock the ship's
+        doors. Locking the doors prevents the player from leaving the bridge.
+      \item \textbf{Cargo Bay Airlock Controls}: Controls that open and close
+        the cargo bay airlock.
+    \end{enumerate}
+  \item \textbf{Communication Controls}: Controls that can be rigged to emit a
+    static that may cause
+    passing ships to stop and investigate. Necessary for the scavenging ship to stop
+    and hail, otherwise
+    it will pass by and the player will be unable to repair the engine. If it is
+    rigged, then at between 20 
+    and 35 (in-game) minutes the scavenging ship will attempt to hail the ship. If
+    the player is at the comms, they may be answered, causing the scavenging ship
+    to dock and its crew to board the ship. 
+  \end{enumerate}
+  \item \textbf{Ladder}$\ast$: A ladder leading down to an airlock that would have
+    allowed for space walks.
+\end{enumerate}
+
+%-----------END BRIDGE-----------
+
+%----------BEGIN FRONT HALL----------
+
+\subsection{Front Hall}
+
+\begin{enumerate}
+  \item \textbf{Ladder}: May be looked at.
+  \begin{enumerate}
+    \item \textbf{Oxygen Controls}$\ast$: Controls that would have been able to
+      restrict or cut off the flow of oxygen throughout the ship.
+    \item \textbf{Temperature Controls}$\ast$: Controls that would have been
+      able to restrict the temperature regulation of the ship.
+  \end{enumerate}
+\end{enumerate}
+
+%-----------END FRONT HALL-----------
+
+%----------BEGIN KITCHEN----------
+
+\subsection{Kitchen}
+
+\begin{enumerate}
+  \item \textbf{Cabinets}: May be looked at.
+  \begin{enumerate}
+    \item \textbf{Food}: A purely cosmetic item.
+    \item \textbf{Cutlery}$\ast$: Items that would have enabled close-quarters
+      grappling with the scavenging crew.
+  \end{enumerate}
+  \item \textbf{Table}: May be looked at.
+  \begin{enumerate}
+    \item \textbf{Cutlery}$\ast$: Items that would have enabled close-quarters
+      grappling with the scavenging crew.
+  \end{enumerate}
+\end{enumerate}
+
+%-----------END KITCHEN-----------
+
+%----------BEGIN BACK HALL----------
+
+\subsection{Back Hall}
+
+\begin{enumerate}
+  \item \textbf{Ladder}: May be looked at.
+  \begin{enumerate}
+   \item \textbf{Airlock}$\ast$: A hatch that would have allowed for space
+     walks.
+   \item \textbf{Gravity Rotor}$\ast$: The rotor controlling the artificial
+     gravity on the ship. Would have been made adjustable to affect ship
+     navigation and interactions with the scavenging crew.
+  \end{enumerate}
+\end{enumerate}
+
+%-----------END BACK HALL-----------
+
+%----------BEGIN ENGINE ROOM----------
+
+\subsection{Engine Room}
+
+\begin{enumerate}
+  \item \textbf{Engine}: The initially broken engine. If examined or diagnosed
+    while the player has either read the manual or succeeded on a 1 in 4 chance,
+    the player can determine that the calalyzer is broken. When attempting to
+    repair the engine, if the player has the catalyzer in inventory, the game is won.
+  \item \textbf{Engine Bins}: May be looked at.
+  \begin{enumerate}
+    \item \textbf{Tools}: A cosmetic item.
+    \item \textbf{Parts}: A cosmetic item.
+    \item \textbf{Manual}: A technical manual that, when read, gives the player
+      knowledge about the engine. It tells the player that the catalyzer is the
+      part that needs to be found.
+  \end{enumerate}
+\end{enumerate}
+
+%-----------END ENGINE ROOM-----------
+
+%----------BEGIN CREW DORMS----------
+
+\subsection{Crew Dorms}
+
+\begin{enumerate}
+  \item \textbf{Ladder}: A cosmetic item.
+  \item \textbf{Weapons}: Guns that can be used for defense should the
+    scavenging crew board. If the player does not have a gun in inventory when
+    the scavenging crew boards, the player will surely die.
+  \item \textbf{Food}: A cosmetic item.
+  \item \textbf{Clothing}$\ast$: Item that would have allowed the player to survive
+    longer in the ship once the temperature had dropped below a certain point.
+\end{enumerate}
+
+%-----------END CREW DORMS-----------
+
+%----------BEGIN CATWALK----------
+
+\subsection{Catwalk}
+
+\qq If the player enters the catwalk when the airlock is open and the scavenging
+ship has not docked, they will be sucked out into space.
+
+%-----------END CATWALK-----------
+
+%----------BEGIN CARGO BAY----------
+
+\subsection{Cargo Bay}
+
+\qq If the player enters the cargo bay when the airlock is open and the
+scavenging ship has not docked, then they will be sucked out into space. If the
+player opens the airlock while the scavenging ship has docked, then the crew
+will board and pull their guns on the player. Any action will cause the captain
+to shoot the player in one of four locations: the head, chest, stomach, or
+legs. A head or chest injury results in instant death. If the player is shot in
+the stomach or legs and has picked up a weapon, then they will surprise the
+captain, who orders a retreat after giving the player a spare catalyzer; the
+crew then undocks and leaves. If the player does not have a gun, the captain
+shoots the player again, killing them.
+
+\begin{enumerate}
+  \item \textbf{Boxes}: May be looked at.
+  \begin{enumerate}
+    \item \textbf{Weapons}: Guns that can be used for defense should the
+    scavenging crew board. If the player does not have a gun in inventory when
+    the scavenging crew boards, the player will surely die.
+    \item \textbf{Parts}$\ast$: Spare parts that would have had a random chance
+      of containing a catalyzer
+  \end{enumerate}
+  \item \textbf{Space Suit}: A suit that the player may wear. If the player is
+    sucked out into space while wearing the suit, they will tumble about for a
+    short while before succumbing to their fate.
+  \item \textbf{Airlock Switch}: A switch that opens and closes the cargo bay
+    airlock. If the call of the scavenging ship had been answered, opening the
+    airlock triggers the boarding sequence. Otherwise, the player is sucked out
+    into space.
+\end{enumerate}
+
+%-----------END CARGO BAY-----------
+
+%----------BEGIN INFIRMARY----------
+
+\subsection{Infirmary}
+
+\begin{enumerate}
+  \item \textbf{Cabinets}: May be looked at.
+  \begin{enumerate}
+    \item \textbf{Biofoam}$\ast$: A fast acting wound sealant that would have
+      allowed the player to last longer after sustaining injuries.
+    \item \textbf{Bandages}$\ast$: A wound sealant that would have allowed the
+      player to last longer after sustaining injuries.
+    \item \textbf{Painkillers}$\ast$: Pills that would have allowed the player
+      to act normally after sustaining injuries.
+    \item \textbf{Adrenaline}$\ast$: A shot that would have temporarily restored
+      the player's health.
+  \end{enumerate}
+  \item \textbf{Tables}
+  \begin{enumerate}
+    \item \textbf{Dope}$\ast$: A sedative that would have knocked out the player
+      for several hours.
+    \item \textbf{Syringes}: A cosmetic item.
+    \item \textbf{Surgical Tools}: A cosmetic item.
+  \end{enumerate}
+\end{enumerate}
+
+%-----------END INFIRMARY-----------
+
+%----------BEGIN PASSANGER DORMS----------
+
+\subsection{Passenger Dorms}
+
+\begin{enumerate}
+  \item \textbf{Dressers}
+  \begin{enumerate}
+    \item \textbf{Food}: A cosmetic item.
+    \item \textbf{Clothing}$\ast$: Item that would have allowed the player to survive
+    longer in the ship once the temperature had dropped below a certain point. 
+  \end{enumerate}
+\end{enumerate}
+
+%-----------END PASSANGER DORMS-----------
+
+%----------BEGIN POSSIBLE DEATHS----------
+
+\subsection{Possible Deaths}
+
+\begin{enumerate}
+  \item Lack of oxygen
+  \item Freezing temperatures
+  \item Sucked out into space without a space suit
+  \item Sucked out into space with a space suit
+  \item Shot by the captain in the head
+  \item Shot by the captain in the chest
+  \item Shot by the captain a second time
+  \item Reavers (small random chance)
+\end{enumerate}
+
+%-----------END POSSIBLE DEATHS-----------
+
+%----------BEGIN WALKTHROUGH----------
+
+\section{Walkthrough}
+
+\qq The following is a transcript of the game from start to finish following the
+quickest path.
+
+\verbatiminput{Walkthrough.txt}
+
+%-----------END WALKTHROUGH-----------
+
+\end{document}

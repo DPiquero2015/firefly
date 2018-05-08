@@ -1,0 +1,76 @@
+The Bridge - Where the game begins.
+	Consoles - May be looked at to reveal the following.
+		Navigation Controls - May be looked at.
+			Joystick - May be looked at. Nothing happens.
+		System Controls - May be looked at.
+			Light Controls - Controls the ship's lights. Turning them off prevents the player from looking at anything.
+			Door Controls - Controls that lock and unlock the ship's doors. Locking the doors prevents the player from leaving the bridge.
+			Cargo Bay Airlock Controls - Controls that open and close the cargo bay airlock.
+		Communication Controls - Controls that may be rigged to emit a static that may cause passing ships to stop and investigate. Necessary for the scavenging ship to stop and hail, otherwise it will pass by and the player will be unable to repair the engine. If it is rigged, then between 20 and 35 (in-game) minutes the scavenging ship will attempt to hail the ship. If the player is at the comms they may be answered, causing the scavenging ship to dock and its crew to board the ship.
+	Windows - May be looked out of, telling one of three quotes from the show. On the rare event that reavers board the ship, at the time right before boarding the player may look out and see the ship approaching.
+	Ladder - A ladder leading down to an airlock that would have allowed for space walks.
+
+The Front Hall
+	Ladder - May be looked at.
+		Oxygen Controls - Controls that would be able to restrict or cut off the flow of oxygen throughout the ship given more time.
+		Temperature Controls - Controls that would be able to restrict the temperature regulation of the ship given more time.
+
+The Kitchen
+	Cabinets - May be looked at.
+		Food - A purely cosmetic item.
+		Cutlery - Items that would enable close-quarters grappling with the scavenging crew given more time.
+	Table - May be looked at.
+		Cutlery - Items that would enable close-quarters grappling with the scavenging crew given more time.
+
+The Back Hall
+	Ladder - May be looked at.
+		Airlock - A hatch that would allow space walks given more time.
+		Gravity Rotor - The rotor controlling the artificial gravity on the ship, would be adjustable given more time.
+
+The Engine Room
+	Engine - The initially broken engine. If examined or diagnosed given that the player has either read the manual, or succeeded on a 1 in 4 chance, the player can determine the faulty part. If attempting to repair it, the player must have the catalyzer in their inventory; if so, the game is won.
+	Engine Bins - May be looked at.
+		Tools - A cosmetic item.
+		Parts - More cosmetic items.
+		Manual - A manual that, when read, gives the reader knowledge about the engine.
+
+The Crew Dorms
+	Ladder - A cosmetic item.
+	Weapons - Guns that allow the player to defend themselves should the scavenging crew board. If the player does not have a gun when the scavenging ship boards, the player will surely die.
+	Food - Another cosmetic item.
+	Clothing - Items that would allow the player to survive longer in a cold ship given more time.
+
+The Catwalk - If the player enters the catwalk when the airlock is open and the ship has not docked, then they will be sucked out into space.
+
+The Cargo Bay - If the player enters the cargo bay when the airlock is open and the ship has not docked, then they will be sucked out into space. If the player opens the airlock while the scavenging ship has docked, then the crew will board and pull their guns on the player. Any action will cause the captain to shoot the player in one of four locations: the head, chest, stomach, or legs. A head or chest injury results in instant death. If the player is shot in the stomach or legs and has picked up a weapon, then they will surprise the captain, who orders a retreat after giving the player the spare catalyzer; the crew then undocks and leaves. If the player does not have a gun, the captain shoots the player again, killing them.
+	Boxes - May be looked at.
+		Weapons - Guns that allow the player to defend themselves should the scavenging crew board. If the player does not have a gun when the scavenging ship boards, the player will surely die.
+		Parts - Spare parts that would have a random chance of being a catalyzer given more time.
+	Space Suit - A suit that the player may wear. If the player is sucked out into space via the cargo bay airlock while wearing the suit, they will tumble about for a short while, then die.
+	Airlock Switch - A switch that opens and closes the cargo bay airlock. Opening the airlock either causes the player to be sucked out into space, or trigger the boarding sequence if the scavenging ship has docked.
+
+The Infirmary
+	Cabinets - May be looked at.
+		Biofoam - A fast acting wound sealant that would have allowed the player to last longer with injuries given more time.
+		Bandages - A wound sealant that would have allowed the player to last longer with injuries given more time.
+		Painkillers - Pills that would have allowed the player act normally with injuries given more time.
+		Adrenaline - A shot that would have temporarily restored the player's health given more time.
+	Tables - May be looked at.
+		Dope - A sedative that would have knocked the player out for several hours given more time.
+		Syringes - A cosmetic item.
+		Tools - More cosmetic items.
+
+The Passenger Dorms
+	Dressers
+		Food - Another cosmetic item.
+		Clothing - Items that would allow the player to survive longer in a cold ship given more time.
+
+Possible Deaths
+	Lack of oxygen
+	Freezing temperatures
+	Sucked out into space, no suit
+	Sucked out into space, suit
+	Shot by the captain, in the head
+	Shot by the captain, in the chest
+	Shot by the captain, again
+	Reavers
